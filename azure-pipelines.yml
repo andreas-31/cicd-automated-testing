@@ -34,6 +34,8 @@ steps:
       $env:ARM_SUBSCRIPTION_ID ??= $(az account show --query id -o tsv)              
 
       # Put Terraform commands after this line
+      terraform version
+      terraform init
     addSpnToEnvironment: true
     useGlobalConfig: true
     failOnStandardError: true
