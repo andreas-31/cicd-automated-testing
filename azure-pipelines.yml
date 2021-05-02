@@ -18,6 +18,11 @@ steps:
     echo See https://aka.ms/yaml
   displayName: 'Run a multi-line script'
 
+- task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
+  displayName: Install Terraform
+  inputs:
+    terraformVersion: latest
+
 - task: AzureCLI@2
   displayName: 'Terraform init'
   inputs:
