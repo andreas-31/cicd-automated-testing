@@ -18,6 +18,18 @@ steps:
     echo See https://aka.ms/yaml
   displayName: 'Run a multi-line script'
 
+- task: AzureCLI@2
+  displayName: Check AZ Version
+  inputs:
+    azureSubscription: arm-resource-group
+    scriptType: ps
+    scriptLocation: inlineScript
+    inlineScript: |
+      echo "az version"
+      az --version
+      echo "az account show"
+      az account show
+
 - task: AzureCLI@1
   displayName: Terraform credentials
   inputs:
