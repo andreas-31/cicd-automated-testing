@@ -21,7 +21,7 @@ steps:
 - task: AzureCLI@2
   displayName: 'Terraform init'
   inputs:
-    azureSubscription: '$(subscriptionConnection)'
+    azureSubscription: 'arm-resource-group'
     scriptType: pscore
     scriptLocation: inlineScript
     inlineScript: |
@@ -38,4 +38,4 @@ steps:
     useGlobalConfig: true
     failOnStandardError: true
     powerShellIgnoreLASTEXITCODE: false
-    workingDirectory: '$(terraformDirectory)'
+    workingDirectory: '.'
