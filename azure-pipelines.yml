@@ -18,31 +18,16 @@ steps:
     echo See https://aka.ms/yaml
   displayName: 'Run a multi-line script'
 
-- task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
-  displayName: Install Terraform
+- task: AzureCLI@1
+  displayName: Terraform credentials
   inputs:
-    terraformVersion: latest
-
-- task: AzureCLI@2
-  displayName: 'Terraform init'
-  inputs:
-    azureSubscription: 'arm-resource-group'
-    scriptType: pscore
+    azureSubscription: arm-resource-group
     scriptLocation: inlineScript
     inlineScript: |
-      # Propagate pipeline Service Principal as Terraform variables
-      $env:ARM_CLIENT_ID       ??= $env:servicePrincipalId
-      $env:ARM_CLIENT_SECRET   ??= $env:servicePrincipalKey
-      $env:ARM_TENANT_ID       ??= $env:tenantId
-      # Propagate from Azure CLI context
-      $env:ARM_TENANT_ID       ??= $(az account show --query tenantId -o tsv)
-      $env:ARM_SUBSCRIPTION_ID ??= $(az account show --query id -o tsv)              
-
-      # Put Terraform commands after this line
-      terraform version
-      terraform init
+      set -eu  # fail on error
+      subscriptionId=$(az account show --query id -o tsv)
+      echo "##vso[task.setvariable variable=ARM_CLIENT_ID]$servicePrincipalId"
+      echo "##vso[task.setvariable variable=ARM_CLIENT_SECRET;issecret=true]$servicePrincipalKey"
+      echo "##vso[task.setvariable variable=ARM_SUBSCRIPTION_ID]$subscriptionId"
+      echo "##vso[task.setvariable variable=ARM_TENANT_ID]$tenantId"
     addSpnToEnvironment: true
-    useGlobalConfig: true
-    failOnStandardError: true
-    powerShellIgnoreLASTEXITCODE: false
-    workingDirectory: '.'
