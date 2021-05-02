@@ -22,7 +22,6 @@ steps:
   displayName: Check AZ Version
   inputs:
     azureSubscription: arm-resource-group
-    scriptType: ps
     scriptLocation: inlineScript
     inlineScript: |
       echo "az version"
