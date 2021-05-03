@@ -5,9 +5,9 @@ resource "azurerm_network_interface" "nic" {
 
   ip_configuration {
     name                          = "internal"
-    subnet_id                     = azurerm_subnet.test.id
+    subnet_id                     = ${module.network.subnet_id_test}
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.test.id
+    public_ip_address_id          = ${module.publicip.public_ip_address_id}
   }
 }
 
