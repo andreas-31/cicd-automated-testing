@@ -18,7 +18,7 @@ resource "azurerm_network_interface_security_group_association" "test" {
 }
 
 resource "azurerm_linux_virtual_machine" "vm" {
-  name                = "${var.application_type}-vm"
+  name                = "${var.application_type}-${resource_type}"
   location            = "${azureLocation}"
   resource_group_name = azurerm_resource_group.test.name
   size                = "Standard_B1s"
@@ -26,7 +26,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
   network_interface_ids = [azurerm_network_interface.nic.id]
   admin_ssh_key {
     username   = "azureuser"
-    public_key = "file("~/.ssh/id_rsa.pub")"
+    public_key = file("~/.ssh/id_rsa.pub")
   }
   os_disk {
     caching           = "ReadWrite"
