@@ -48,7 +48,7 @@ steps:
   inputs:
     knownHostsEntry: 'SHA256:1Hyr55tsxGifESBMc0s+2NtutnR/4+LOkVwrOGrIp8U johndoe@contoso'
     sshPublicKey: '$(myPubKey)'
-    sshKeySecureFile: 'azure_devops_key.pem'
+    sshKeySecureFile: 'azure-devops-key.pem'
 
 - task: CmdLine@2
   displayName: 'Checking SSH files'
