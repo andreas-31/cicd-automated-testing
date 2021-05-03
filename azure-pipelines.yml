@@ -49,8 +49,7 @@ steps:
       echo "##vso[task.setvariable variable=ARM_SUBSCRIPTION_ID]$subscriptionId"
       echo "##vso[task.setvariable variable=ARM_TENANT_ID]$tenantId"
       echo "Determining Terraform remote backend information"
-      accountKeyResult=$(az storage account keys list --resource-group $tf-resource-group-name --account-name $tf-storage-account-name --query '[0].value' -o tsv)
-      echo "##vso[task.setvariable variable=ACCOUNT_KEY]$accountKeyResult"
+      echo "##vso[task.setvariable variable=ACCOUNT_KEY]$(az storage account keys list --resource-group $tf-resource-group-name --account-name $tf-storage-account-name --query '[0].value' -o tsv)"
     addSpnToEnvironment: true
 - task: AzureCLI@2
   displayName: 'Terraform init'
