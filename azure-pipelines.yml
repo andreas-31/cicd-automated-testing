@@ -75,3 +75,10 @@ steps:
     failOnStandardError: true
     powerShellIgnoreLASTEXITCODE: false
     workingDirectory: '$(terraformDirectory)'
+
+- bash: |
+    set -eu  # fail on error
+    terraform plan -out=solution.plan -input=false
+    #terraform apply -input=false -auto-approve tfplan
+  displayName: Terraform apply
+  workingDirectory: '$(terraformDirectory)'
