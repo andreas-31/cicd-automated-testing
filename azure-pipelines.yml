@@ -25,7 +25,7 @@ variables:
 - name: subscriptionConnection
   value: arm-resource-group
 - name: terraformDirectory
-  value: .
+  value: terraform
 
 steps:
 - script: echo Hello, world!
