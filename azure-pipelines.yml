@@ -10,10 +10,20 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-- name: resource-group-name
+- name: azureLocation
+  value: eastus
+- name: azureResourceGroup
+  value: cicd-automated-testing-rg
+- name: azureApplicationType
   value: cicd-automated-testing
+- name: azureVirtualNetworkName
+  value: cicd-network
+- name: azureAddressPrefixTest
+  value: 10.0.0.0/24
+- name: azureAddressSpace
+  value: 10.0.0.0/24
 - name: virtual-machine-name
-  value: cicd-virtual-machine
+  value: ubuntu-virtual-machine
 - name: tf-resource-group-name
   value: tstate
 - name: tf-storage-account-name
@@ -28,14 +38,6 @@ variables:
   value: terraform
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
-
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
-
 - task: AzureCLI@1
   displayName: Terraform credentials
   inputs:
@@ -78,7 +80,17 @@ steps:
 
 - bash: |
     set -eu  # fail on error
-    terraform plan -out=solution.plan -input=false
-    #terraform apply -input=false -auto-approve tfplan
+    terraform plan -out=solution.plan -input=false \
+      -var="subscription_id=$(ARM_SUBSCRIPTION_ID)" \
+      -var="client_id=$(ARM_CLIENT_ID)" \
+      -var="client_secret=$(ARM_CLIENT_SECRET)" \
+      -var="tenant_id=$(ARM_TENANT_ID)" \
+      -var="location=$(azureLocation)" \
+      -var="resource_group=$(azureResourceGroup)" \
+      -var="application_type=$(azureResourceGroup)" \
+      -var="virtual_network_name=$(azureVirtualNetworkName)" \
+      -var="address_prefix_test=$(azureVirtualNetworkName)" \
+      -var="address_space=$(azureAddressSpace)"
+    #terraform apply -input=false -auto-approve solution.plan
   displayName: Terraform apply
   workingDirectory: '$(terraformDirectory)'
