@@ -5,9 +5,9 @@ resource "azurerm_network_interface" "nic" {
 
   ip_configuration {
     name                          = "internal"
-    subnet_id                     = "${var.subnet_id_test}"
+    subnet_id                     = "${var.subnet_id}"
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = "${var.publicip.public_ip_address_id}"
+    public_ip_address_id          = "${var.public_ip_address_id}"
   }
 }
 
