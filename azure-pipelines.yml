@@ -36,19 +36,12 @@ variables:
   value: terraform
 
 steps:
-- task: CmdLine@2
-  displayName: 'Setting public key environment variable'
-  inputs:
-    script: |
-      echo "Setting public key environment variable"
-      echo "##vso[task.setvariable variable=myPubKey]$(AZURE-DEVOPS-PUBLIC-KEY)"
-      echo 'KEY_START $(myPubKey) KEY_END'
 - task: InstallSSHKey@0
   displayName: 'Install an SSH key'
   inputs:
     knownHostsEntry: 'SHA256:1Hyr55tsxGifESBMc0s+2NtutnR/4+LOkVwrOGrIp8U johndoe@contoso'
     sshPublicKey: '$(AZURE-DEVOPS-PUBLIC-KEY)'
-    sshKeySecureFile: 'azure-devops-key.pem'
+    sshKeySecureFile: 'id_rsa'
 
 - task: CmdLine@2
   displayName: 'Checking SSH files'
@@ -56,6 +49,7 @@ steps:
     script: |
       echo "Checking SSH files"
       ls -la ~/.ssh
+      ls -l ~
 
 - task: AzureCLI@1
   displayName: Terraform credentials
