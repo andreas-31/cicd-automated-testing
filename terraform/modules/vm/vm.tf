@@ -19,7 +19,7 @@ resource "azurerm_linux_virtual_machine" "" {
   admin_username      = ""
   network_interface_ids = []
   admin_ssh_key {
-    username   = ""
+    username   = "azureuser"
     public_key = "file("~/.ssh/id_rsa.pub")"
   }
   os_disk {
@@ -29,7 +29,7 @@ resource "azurerm_linux_virtual_machine" "" {
   source_image_reference {
     publisher = "Canonical"
     offer     = "UbuntuServer"
-    sku       = "16.04-LTS"
+    sku       = "18.04-LTS"
     version   = "latest"
   }
 }
