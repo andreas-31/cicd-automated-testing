@@ -47,7 +47,7 @@ steps:
   displayName: 'Install an SSH key'
   inputs:
     knownHostsEntry: 'SHA256:1Hyr55tsxGifESBMc0s+2NtutnR/4+LOkVwrOGrIp8U johndoe@contoso'
-    sshPublicKey: '$(myPubKey)'
+    sshPublicKey: '$(AZURE-DEVOPS-PUBLIC-KEY)'
     sshKeySecureFile: 'azure-devops-key.pem'
 
 - task: CmdLine@2
