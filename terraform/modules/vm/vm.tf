@@ -14,11 +14,11 @@ resource "azurerm_network_interface" "nic" {
 # Connect the security group to the network interface
 resource "azurerm_network_interface_security_group_association" "test" {
     network_interface_id      = azurerm_network_interface.nic.id
-    network_security_group_id = azurerm_network_security_group.nsg.id
+    network_security_group_id = "${var.nsg_id}"
 }
 
 resource "azurerm_linux_virtual_machine" "vm" {
-  name                = "${var.application_type}-${resource_type}"
+  name                = "${var.application_type}-${var.resource_type}"
   location            = "${var.location}"
   resource_group_name = "${var.resource_group}"
   size                = "Standard_B1s"
