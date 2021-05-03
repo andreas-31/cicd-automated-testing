@@ -9,6 +9,24 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
+variables:
+- name: resource-group-name
+  value: cicd-automated-testing
+- name: virtual-machine-name
+  value: cicd-virtual-machine
+- name: tf-resource-group-name
+  value: tstate
+- name: tf-storage-account-name
+  value: tstate13515
+- name: tf-container-name
+  value: tstate
+- name: tf-blob-key-name
+  value: test.cicd.terraform.tfstate
+- name: subscriptionConnection
+  value: arm-resource-group
+- name: terraformDirectory
+  value: .
+
 steps:
 - script: echo Hello, world!
   displayName: 'Run a one-line script'
@@ -18,21 +36,10 @@ steps:
     echo See https://aka.ms/yaml
   displayName: 'Run a multi-line script'
 
-- task: AzureCLI@2
-  displayName: Check AZ Version
-  inputs:
-    azureSubscription: arm-resource-group
-    scriptType: pscore
-    scriptLocation: inlineScript
-    inlineScript: |
-      az --version
-      az account show
-      echo "HALLO"
-
 - task: AzureCLI@1
   displayName: Terraform credentials
   inputs:
-    azureSubscription: arm-resource-group
+    azureSubscription: '$(subscriptionConnection)'
     scriptLocation: inlineScript
     inlineScript: |
       set -eu  # fail on error
@@ -41,11 +48,27 @@ steps:
       echo "##vso[task.setvariable variable=ARM_CLIENT_SECRET;issecret=true]$servicePrincipalKey"
       echo "##vso[task.setvariable variable=ARM_SUBSCRIPTION_ID]$subscriptionId"
       echo "##vso[task.setvariable variable=ARM_TENANT_ID]$tenantId"
-      echo "HALLO"
+      echo "Determining Terraform remote backend information"
+      accountKeyResult=$(az storage account keys list --resource-group $tf-resource-group-name --account-name $tf-storage-account-name --query '[0].value' -o tsv)
+      echo "##vso[task.setvariable variable=ACCOUNT_KEY]$accountKeyResult"
     addSpnToEnvironment: true
-- task: CmdLine@2
+- task: AzureCLI@2
+  displayName: 'Terraform init'
   inputs:
-    script: |
-      echo "ARM_SUBSCRIPTION_ID:"
-      
-      echo $ARM_SUBSCRIPTION_ID
+    azureSubscription: '$(subscriptionConnection)'
+    scriptType: pscore
+    scriptLocation: inlineScript
+    inlineScript: |
+      # Run Terraform
+      terraform version
+      terraform init `
+                     -backend-config="resource_group_name=$(tf-resource-group-name)" `
+                     -backend-config="storage_account_name=$(tf-storage-account-name)" `
+                     -backend-config="container_name=$(tf-container-name)" `
+                     -backend-config="key=$(tf-blob-key-name)" `
+                     -backend-config="access_key=$(ACCOUNT_KEY)"
+    addSpnToEnvironment: true
+    useGlobalConfig: true
+    failOnStandardError: true
+    powerShellIgnoreLASTEXITCODE: false
+    workingDirectory: '$(terraformDirectory)'
