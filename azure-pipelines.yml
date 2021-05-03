@@ -51,14 +51,16 @@ steps:
       echo "Checking SSH files"
       echo "---ls -la ~/.ssh"
       ls -la ~/.ssh
-      echo "---/home/vsts/work/_temp/id_rsa"
+      echo "---ls -l /home/vsts/work/_temp/id_rsa"
       ls -l /home/vsts/work/_temp/id_rsa
-      echo "---/home/vsts/work/_temp"
+      echo "---ls -la /home/vsts/work/_temp"
       ls -la /home/vsts/work/_temp
-      echo "---/home/vsts/work"
+      echo "---ls -la /home/vsts/work"
       ls -la /home/vsts/work
       echo "---find ~ -name id_rsa -type f -exec ls -l {} \;"
       find ~ -name id_rsa -type f -exec ls -l {} \;
+      echo "ssh-add -L"
+      ssh-add -L
 
 - task: AzureCLI@1
   displayName: Terraform credentials
