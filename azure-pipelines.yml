@@ -22,8 +22,6 @@ variables:
   value: 10.0.0.0/24
 - name: azureAddressSpace
   value: 10.0.0.0/24
-- name: virtual-machine-name
-  value: ubuntu-virtual-machine
 - name: tf-resource-group-name
   value: tstate
 - name: tf-storage-account-name
@@ -38,6 +36,27 @@ variables:
   value: terraform
 
 steps:
+- task: CmdLine@2
+  displayName: 'Setting public key environment variable'
+  inputs:
+    script: |
+      echo "Setting public key environment variable"
+      echo "##vso[task.setvariable variable=myPubKey]$(AZURE-DEVOPS-PUBLIC-KEY)"
+      echo 'KEY_START $(myPubKey) KEY_END'
+- task: InstallSSHKey@0
+  displayName: 'Install an SSH key'
+  inputs:
+    knownHostsEntry: 'SHA256:1Hyr55tsxGifESBMc0s+2NtutnR/4+LOkVwrOGrIp8U johndoe@contoso'
+    sshPublicKey: '$(myPubKey)'
+    sshKeySecureFile: 'azure_devops_key.pem'
+
+- task: CmdLine@2
+  displayName: 'Checking SSH files'
+  inputs:
+    script: |
+      echo "Checking SSH files"
+      ls -la ~/.ssh
+
 - task: AzureCLI@1
   displayName: Terraform credentials
   inputs:
@@ -53,6 +72,7 @@ steps:
       echo "Determining Terraform remote backend information"
       echo "##vso[task.setvariable variable=ACCOUNT_KEY]$(az storage account keys list --resource-group $tf-resource-group-name --account-name $tf-storage-account-name --query '[0].value' -o tsv)"
     addSpnToEnvironment: true
+
 - task: AzureCLI@2
   displayName: 'Terraform init'
   inputs:
