@@ -1,7 +1,7 @@
 resource "azurerm_network_interface" "nic" {
   name                = "${var.application_type}-nic"
-  location            = "${azureLocation}"
-  resource_group_name = azurerm_resource_group.test.name
+  location            = "${var.location}"
+  resource_group_name = "${var.resource_group}"
 
   ip_configuration {
     name                          = "internal"
@@ -19,8 +19,8 @@ resource "azurerm_network_interface_security_group_association" "test" {
 
 resource "azurerm_linux_virtual_machine" "vm" {
   name                = "${var.application_type}-${resource_type}"
-  location            = "${azureLocation}"
-  resource_group_name = azurerm_resource_group.test.name
+  location            = "${var.location}"
+  resource_group_name = "${var.resource_group}"
   size                = "Standard_B1s"
   admin_username      = "azureuser"
   network_interface_ids = [azurerm_network_interface.nic.id]
