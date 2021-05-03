@@ -19,9 +19,9 @@ variables:
 - name: azureVirtualNetworkName
   value: cicd-network
 - name: azureAddressPrefixTest
-  value: "[\"10.0.0.0/24\"]"
+  value: '["10.0.0.0/24"]'
 - name: azureAddressSpace
-  value: "[\"10.0.0.0/24\"]"
+  value: '["10.0.0.0/24"]'
 - name: virtual-machine-name
   value: ubuntu-virtual-machine
 - name: tf-resource-group-name
