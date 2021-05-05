@@ -105,6 +105,13 @@ steps:
 
 - bash: |
     set -eu  # fail on error
+    # validate Terraform code
+    terraform validate
+  displayName: Terraform validate
+  workingDirectory: '$(terraformDirectory)'
+
+- bash: |
+    set -eu  # fail on error
     terraform plan -out=solution.plan -input=false \
       -var="subscription_id=$(ARM_SUBSCRIPTION_ID)" \
       -var="client_id=$(ARM_CLIENT_ID)" \
@@ -123,21 +130,30 @@ steps:
 - bash: |
     set -eu  # fail on error
     terraform apply -input=false -auto-approve solution.plan
-  displayName: Terraform plan
+  displayName: Terraform apply
   workingDirectory: '$(terraformDirectory)'
 
 - bash: |
     set -eu  # fail on error
-    terraform destroy -input=false -auto-approve \
-      -var="subscription_id=$(ARM_SUBSCRIPTION_ID)" \
-      -var="client_id=$(ARM_CLIENT_ID)" \
-      -var="client_secret=$(ARM_CLIENT_SECRET)" \
-      -var="tenant_id=$(ARM_TENANT_ID)" \
-      -var="location=$(azureLocation)" \
-      -var="resource_group=$(azureResourceGroup)" \
-      -var="application_type=$(azureApplicationType)" \
-      -var="virtual_network_name=$(azureVirtualNetworkName)" \
-      -var="address_prefix_test=$(azureAddressPrefixTest)" \
-      -var="address_space=$(azureAddressSpace)"
-  displayName: Terraform destroy
+    # show all Terraform outputs
+    terraform output
+    # show current Terraform resources
+    terraform show
+  displayName: Terraform show
   workingDirectory: '$(terraformDirectory)'
+
+#- bash: |
+#    set -eu  # fail on error
+#    terraform destroy -input=false -auto-approve \
+#      -var="subscription_id=$(ARM_SUBSCRIPTION_ID)" \
+#      -var="client_id=$(ARM_CLIENT_ID)" \
+#      -var="client_secret=$(ARM_CLIENT_SECRET)" \
+#      -var="tenant_id=$(ARM_TENANT_ID)" \
+#      -var="location=$(azureLocation)" \
+#      -var="resource_group=$(azureResourceGroup)" \
+#      -var="application_type=$(azureApplicationType)" \
+#      -var="virtual_network_name=$(azureVirtualNetworkName)" \
+#      -var="address_prefix_test=$(azureAddressPrefixTest)" \
+#      -var="address_space=$(azureAddressSpace)"
+#  displayName: Terraform destroy
+#  workingDirectory: '$(terraformDirectory)'
