@@ -125,3 +125,9 @@ steps:
     terraform apply -input=false -auto-approve solution.plan
   displayName: Terraform plan
   workingDirectory: '$(terraformDirectory)'
+
+- bash: |
+    set -eu  # fail on error
+    terraform destroy -input=false -auto-approve
+  displayName: Terraform destroy
+  workingDirectory: '$(terraformDirectory)'
