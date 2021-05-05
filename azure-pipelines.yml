@@ -164,7 +164,7 @@ stages:
     #  displayName: Terraform destroy
     #  workingDirectory: '$(terraformDirectory)'
 
-- stage:
+- stage: Deployment
   jobs:
   #- deployment: FakeRestAPI
   #  pool:
@@ -198,8 +198,16 @@ stages:
                 #! /bin/bash
                 touch VMDeploy.txt
                 sudo apt-get upgrade -y
-                sudo apt-get install python3-pip -y
+
+                # install python pip
+                # sudo apt-get install python3-pip -y
+                curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py || wget https://bootstrap.pypa.io/get-pip.py
+                python3 get-pip.py
+                pip3 --version
+                python3 -m pip install -U pip
+                
+                
                 sudo apt-get install unzip -y
-                sudo apt-get install -y chromium-browser
+                sudo snap install chromium-browser
                 pip3 install selenium
                 export PATH=$PATH:some/path
