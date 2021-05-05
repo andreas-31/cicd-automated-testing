@@ -137,6 +137,8 @@ steps:
     set -eu  # fail on error
     # show all Terraform outputs
     terraform output
+    # list all resources in Terraform state
+    terraform state list
     # show current Terraform resources
     terraform show
   displayName: Terraform show
