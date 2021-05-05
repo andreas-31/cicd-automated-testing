@@ -119,3 +119,9 @@ steps:
     #terraform apply -input=false -auto-approve solution.plan
   displayName: Terraform plan
   workingDirectory: '$(terraformDirectory)'
+
+- bash: |
+    set -eu  # fail on error
+    terraform apply -input=false -auto-approve solution.plan
+  displayName: Terraform plan
+  workingDirectory: '$(terraformDirectory)'
