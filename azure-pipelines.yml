@@ -39,132 +39,132 @@ stages:
 - stage: Build
   jobs:
   - job: Build
-  pool:
-    name: Hosted Ubuntu 1804
-  steps:
-  - task: InstallSSHKey@0
-    displayName: 'Install an SSH key'
-    inputs:
-      knownHostsEntry: 'SHA256:1Hyr55tsxGifESBMc0s+2NtutnR/4+LOkVwrOGrIp8U johndoe@contoso'
-      sshPublicKey: '$(ssh-public-key)'
-      sshKeySecureFile: 'id_rsa'
+    pool:
+      name: Hosted Ubuntu 1804
+    steps:
+    - task: InstallSSHKey@0
+      displayName: 'Install an SSH key'
+      inputs:
+        knownHostsEntry: 'SHA256:1Hyr55tsxGifESBMc0s+2NtutnR/4+LOkVwrOGrIp8U johndoe@contoso'
+        sshPublicKey: '$(ssh-public-key)'
+        sshKeySecureFile: 'id_rsa'
 
-  - task: CmdLine@2
-    displayName: 'Checking SSH files'
-    inputs:
-      script: |
-        echo "SSH public key from environment: $(ssh-public-key)"
-        echo "Checking SSH files"
-        echo "---ls -la ~/.ssh"
-        ls -la ~/.ssh
-        echo "---ls -l /home/vsts/work/_temp/id_rsa"
-        ls -l /home/vsts/work/_temp/id_rsa
-        echo "---ls -la /home/vsts/work/_temp"
-        ls -la /home/vsts/work/_temp
-        echo "---ls -la /home/vsts/work"
-        ls -la /home/vsts/work
-        echo "---find ~ -name id_rsa -type f -exec ls -l {} \;"
-        find ~ -name id_rsa -type f -exec ls -l {} \;
-        echo "ssh-add -L"
-        ssh-add -L
+    - task: CmdLine@2
+      displayName: 'Checking SSH files'
+      inputs:
+        script: |
+          echo "SSH public key from environment: $(ssh-public-key)"
+          echo "Checking SSH files"
+          echo "---ls -la ~/.ssh"
+          ls -la ~/.ssh
+          echo "---ls -l /home/vsts/work/_temp/id_rsa"
+          ls -l /home/vsts/work/_temp/id_rsa
+          echo "---ls -la /home/vsts/work/_temp"
+          ls -la /home/vsts/work/_temp
+          echo "---ls -la /home/vsts/work"
+          ls -la /home/vsts/work
+          echo "---find ~ -name id_rsa -type f -exec ls -l {} \;"
+          find ~ -name id_rsa -type f -exec ls -l {} \;
+          echo "ssh-add -L"
+          ssh-add -L
 
-  - task: AzureCLI@1
-    displayName: Terraform credentials
-    inputs:
-      azureSubscription: '$(subscriptionConnection)'
-      scriptLocation: inlineScript
-      inlineScript: |
+    - task: AzureCLI@1
+      displayName: Terraform credentials
+      inputs:
+        azureSubscription: '$(subscriptionConnection)'
+        scriptLocation: inlineScript
+        inlineScript: |
+          set -eu  # fail on error
+          subscriptionId=$(az account show --query id -o tsv)
+          echo "##vso[task.setvariable variable=ARM_CLIENT_ID]$servicePrincipalId"
+          echo "##vso[task.setvariable variable=ARM_CLIENT_SECRET;issecret=true]$servicePrincipalKey"
+          echo "##vso[task.setvariable variable=ARM_SUBSCRIPTION_ID]$subscriptionId"
+          echo "##vso[task.setvariable variable=ARM_TENANT_ID]$tenantId"
+          echo "Determining Terraform remote backend information"
+          echo "##vso[task.setvariable variable=ACCOUNT_KEY]$(az storage account keys list --resource-group $tf-resource-group-name --account-name $tf-storage-account-name --query '[0].value' -o tsv)"
+        addSpnToEnvironment: true
+
+    - task: AzureCLI@2
+      displayName: 'Terraform init'
+      inputs:
+        azureSubscription: '$(subscriptionConnection)'
+        scriptType: pscore
+        scriptLocation: inlineScript
+        inlineScript: |
+          # Run Terraform
+          terraform version
+          terraform init `
+                        -backend-config="resource_group_name=$(tf-resource-group-name)" `
+                        -backend-config="storage_account_name=$(tf-storage-account-name)" `
+                        -backend-config="container_name=$(tf-container-name)" `
+                        -backend-config="key=$(tf-blob-key-name)" `
+                        -backend-config="access_key=$(ACCOUNT_KEY)" `
+                        -backend-config="subscription_id=$(ARM_SUBSCRIPTION_ID)" `
+                        -backend-config="tenant_id=$(ARM_TENANT_ID)" `
+                        -backend-config="client_id=$(ARM_CLIENT_ID)" `
+                        -backend-config="client_secret=$(ARM_CLIENT_SECRET)"
+        addSpnToEnvironment: true
+        useGlobalConfig: true
+        failOnStandardError: true
+        powerShellIgnoreLASTEXITCODE: false
+        workingDirectory: '$(terraformDirectory)'
+
+    - bash: |
         set -eu  # fail on error
-        subscriptionId=$(az account show --query id -o tsv)
-        echo "##vso[task.setvariable variable=ARM_CLIENT_ID]$servicePrincipalId"
-        echo "##vso[task.setvariable variable=ARM_CLIENT_SECRET;issecret=true]$servicePrincipalKey"
-        echo "##vso[task.setvariable variable=ARM_SUBSCRIPTION_ID]$subscriptionId"
-        echo "##vso[task.setvariable variable=ARM_TENANT_ID]$tenantId"
-        echo "Determining Terraform remote backend information"
-        echo "##vso[task.setvariable variable=ACCOUNT_KEY]$(az storage account keys list --resource-group $tf-resource-group-name --account-name $tf-storage-account-name --query '[0].value' -o tsv)"
-      addSpnToEnvironment: true
-
-  - task: AzureCLI@2
-    displayName: 'Terraform init'
-    inputs:
-      azureSubscription: '$(subscriptionConnection)'
-      scriptType: pscore
-      scriptLocation: inlineScript
-      inlineScript: |
-        # Run Terraform
-        terraform version
-        terraform init `
-                      -backend-config="resource_group_name=$(tf-resource-group-name)" `
-                      -backend-config="storage_account_name=$(tf-storage-account-name)" `
-                      -backend-config="container_name=$(tf-container-name)" `
-                      -backend-config="key=$(tf-blob-key-name)" `
-                      -backend-config="access_key=$(ACCOUNT_KEY)" `
-                      -backend-config="subscription_id=$(ARM_SUBSCRIPTION_ID)" `
-                      -backend-config="tenant_id=$(ARM_TENANT_ID)" `
-                      -backend-config="client_id=$(ARM_CLIENT_ID)" `
-                      -backend-config="client_secret=$(ARM_CLIENT_SECRET)"
-      addSpnToEnvironment: true
-      useGlobalConfig: true
-      failOnStandardError: true
-      powerShellIgnoreLASTEXITCODE: false
+        # validate Terraform code
+        terraform validate
+      displayName: Terraform validate
       workingDirectory: '$(terraformDirectory)'
 
-  - bash: |
-      set -eu  # fail on error
-      # validate Terraform code
-      terraform validate
-    displayName: Terraform validate
-    workingDirectory: '$(terraformDirectory)'
+    - bash: |
+        set -eu  # fail on error
+        terraform plan -out=solution.plan -input=false \
+          -var="subscription_id=$(ARM_SUBSCRIPTION_ID)" \
+          -var="client_id=$(ARM_CLIENT_ID)" \
+          -var="client_secret=$(ARM_CLIENT_SECRET)" \
+          -var="tenant_id=$(ARM_TENANT_ID)" \
+          -var="location=$(azureLocation)" \
+          -var="resource_group=$(azureResourceGroup)" \
+          -var="application_type=$(azureApplicationType)" \
+          -var="virtual_network_name=$(azureVirtualNetworkName)" \
+          -var="address_prefix_test=$(azureAddressPrefixTest)" \
+          -var="address_space=$(azureAddressSpace)"
+        #terraform apply -input=false -auto-approve solution.plan
+      displayName: Terraform plan
+      workingDirectory: '$(terraformDirectory)'
 
-  - bash: |
-      set -eu  # fail on error
-      terraform plan -out=solution.plan -input=false \
-        -var="subscription_id=$(ARM_SUBSCRIPTION_ID)" \
-        -var="client_id=$(ARM_CLIENT_ID)" \
-        -var="client_secret=$(ARM_CLIENT_SECRET)" \
-        -var="tenant_id=$(ARM_TENANT_ID)" \
-        -var="location=$(azureLocation)" \
-        -var="resource_group=$(azureResourceGroup)" \
-        -var="application_type=$(azureApplicationType)" \
-        -var="virtual_network_name=$(azureVirtualNetworkName)" \
-        -var="address_prefix_test=$(azureAddressPrefixTest)" \
-        -var="address_space=$(azureAddressSpace)"
-      #terraform apply -input=false -auto-approve solution.plan
-    displayName: Terraform plan
-    workingDirectory: '$(terraformDirectory)'
+    - bash: |
+        set -eu  # fail on error
+        terraform apply -input=false -auto-approve solution.plan
+      displayName: Terraform apply
+      workingDirectory: '$(terraformDirectory)'
 
-  - bash: |
-      set -eu  # fail on error
-      terraform apply -input=false -auto-approve solution.plan
-    displayName: Terraform apply
-    workingDirectory: '$(terraformDirectory)'
+    - bash: |
+        set -eu  # fail on error
+        # show all Terraform outputs
+        terraform output
+        # list all resources in Terraform state
+        terraform state list
+        # show current Terraform resources
+        terraform show
+      displayName: Terraform show
+      workingDirectory: '$(terraformDirectory)'
 
-  - bash: |
-      set -eu  # fail on error
-      # show all Terraform outputs
-      terraform output
-      # list all resources in Terraform state
-      terraform state list
-      # show current Terraform resources
-      terraform show
-    displayName: Terraform show
-    workingDirectory: '$(terraformDirectory)'
-
-  #- bash: |
-  #    set -eu  # fail on error
-  #    terraform destroy -input=false -auto-approve \
-  #      -var="subscription_id=$(ARM_SUBSCRIPTION_ID)" \
-  #      -var="client_id=$(ARM_CLIENT_ID)" \
-  #      -var="client_secret=$(ARM_CLIENT_SECRET)" \
-  #      -var="tenant_id=$(ARM_TENANT_ID)" \
-  #      -var="location=$(azureLocation)" \
-  #      -var="resource_group=$(azureResourceGroup)" \
-  #      -var="application_type=$(azureApplicationType)" \
-  #      -var="virtual_network_name=$(azureVirtualNetworkName)" \
-  #      -var="address_prefix_test=$(azureAddressPrefixTest)" \
-  #      -var="address_space=$(azureAddressSpace)"
-  #  displayName: Terraform destroy
-  #  workingDirectory: '$(terraformDirectory)'
+    #- bash: |
+    #    set -eu  # fail on error
+    #    terraform destroy -input=false -auto-approve \
+    #      -var="subscription_id=$(ARM_SUBSCRIPTION_ID)" \
+    #      -var="client_id=$(ARM_CLIENT_ID)" \
+    #      -var="client_secret=$(ARM_CLIENT_SECRET)" \
+    #      -var="tenant_id=$(ARM_TENANT_ID)" \
+    #      -var="location=$(azureLocation)" \
+    #      -var="resource_group=$(azureResourceGroup)" \
+    #      -var="application_type=$(azureApplicationType)" \
+    #      -var="virtual_network_name=$(azureVirtualNetworkName)" \
+    #      -var="address_prefix_test=$(azureAddressPrefixTest)" \
+    #      -var="address_space=$(azureAddressSpace)"
+    #  displayName: Terraform destroy
+    #  workingDirectory: '$(terraformDirectory)'
 
 - stage:
   jobs:
