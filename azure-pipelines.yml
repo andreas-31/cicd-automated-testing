@@ -198,6 +198,8 @@ stages:
                 #! /bin/bash
                 touch VMDeploy.txt
                 sudo apt-get upgrade -y
+                sudo apt-get install python3-distutils -y
+                sudo apt-get install python3-apt -y
 
                 # install python pip
                 # sudo apt-get install python3-pip -y
