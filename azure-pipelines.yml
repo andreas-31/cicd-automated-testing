@@ -170,7 +170,7 @@ stages:
             displayName: 'Deploy Azure Web App'
             inputs:
               azureSubscription: 'arm-resource-group'
-              appName: 'FakeRestApiApp'
+              appName: 'cicd-app-AppService'
               appType: webApp
               package: $(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip
   - deployment: VMDeploy
