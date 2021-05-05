@@ -39,8 +39,6 @@ stages:
 - stage: Build
   jobs:
   - job: Build
-    pool:
-      name: Hosted Ubuntu 1804
     steps:
     - task: InstallSSHKey@0
       displayName: 'Install an SSH key'
