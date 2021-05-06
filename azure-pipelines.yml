@@ -47,24 +47,16 @@ stages:
         sshPublicKey: '$(ssh-public-key)'
         sshKeySecureFile: 'id_rsa'
 
-    - task: CmdLine@2
-      displayName: 'Checking SSH files'
+    - task: ArchiveFiles@2
+      displayName: 'Archive FakeRestAPI'
       inputs:
-        script: |
-          echo "SSH public key from environment: $(ssh-public-key)"
-          echo "Checking SSH files"
-          echo "---ls -la ~/.ssh"
-          ls -la ~/.ssh
-          echo "---ls -l /home/vsts/work/_temp/id_rsa"
-          ls -l /home/vsts/work/_temp/id_rsa
-          echo "---ls -la /home/vsts/work/_temp"
-          ls -la /home/vsts/work/_temp
-          echo "---ls -la /home/vsts/work"
-          ls -la /home/vsts/work
-          echo "---find ~ -name id_rsa -type f -exec ls -l {} \;"
-          find ~ -name id_rsa -type f -exec ls -l {} \;
-          echo "ssh-add -L"
-          ssh-add -L
+        rootFolderOrFile: 'automatedtesting/jmeter/fakerestapi'
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
+    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip
+      displayName: 'Upload Package REST API'
+      artifact: drop-fakerestapi
 
     - task: AzureCLI@1
       displayName: Terraform credentials
@@ -166,21 +158,21 @@ stages:
 
 - stage: Deployment
   jobs:
-  #- deployment: FakeRestAPI
-  #  pool:
-  #    vmImage: 'Ubuntu-18.04'
-  #  environment: 'TEST'
-  #  strategy:
-  #    runOnce:
-  #      deploy:
-  #        steps:
-  #        - task: AzureWebApp@1
-  #          displayName: 'Deploy Azure Web App'
-  #          inputs:
-  #            azureSubscription: ''
-  #            appName: ''
-  #            appType: webApp
-  #            package: $(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip
+  - deployment: FakeRestAPI
+    pool:
+      vmImage: 'Ubuntu-18.04'
+    environment: 'TEST'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: AzureWebApp@1
+            displayName: 'Deploy Azure Web App'
+            inputs:
+              azureSubscription: 'arm-resource-group'
+              appName: 'cicd-app-AppService'
+              appType: webApp
+              package: $(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip
   - deployment: VMDeploy
     displayName: Deploy Selenium to Ubuntu VM
     environment:
