@@ -140,6 +140,18 @@ stages:
       displayName: Terraform show
       workingDirectory: '$(terraformDirectory)'
 
+    - task: CmdLine@2
+      displayName: Install Newman
+      inputs:
+        script: 'sudo npm install -g newman'
+        workingDirectory: $(System.DefaultWorkingDirectory)
+    - task: CmdLine@2
+      displayName: Run Regression Tests with Newman
+      continueOnError: true
+      inputs:
+        script: 'newman run StarterAPIs.json'
+        workingDirectory: 'automatedtesting/postman'
+
     #- bash: |
     #    set -eu  # fail on error
     #    terraform destroy -input=false -auto-approve \
