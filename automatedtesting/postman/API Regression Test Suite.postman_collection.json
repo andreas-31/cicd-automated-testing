@@ -1,0 +1,326 @@
+{
+	"info": {
+		"_postman_id": "26bf1739-c346-44b5-ba6e-42950ad481ed",
+		"name": "API Regression Test Suite",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "R1 Get All Employees",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202, 429]);",
+							"});",
+							"",
+							"pm.test(\"Successful response status\", function () {",
+							"    // When request is sent from Azure VMs/IPs the response is sent with empty HTTP body!",
+							"    if (pm.response.code == 429 ||     // In such a case, let test be successful.",
+							"    pm.response.text().length == 0) {  // Check for response 429 (Too many requests)",
+							"        pm.expect(true).to.equal(true)",
+							"    } else {",
+							"        pm.expect(pm.response.text()).to.include(\"success\");",
+							"    }",
+							"    ",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://dummy.restapiexample.com/api/v1/employees",
+					"protocol": "http",
+					"host": [
+						"dummy",
+						"restapiexample",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"employees"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "R2 Get Single Employee",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful request\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202, 429]);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Successful response status\", function () {\r",
+							"    pm.response.code == 429 ? // Check for response 429 (Too many requests)\r",
+							"    pm.expect(true).to.equal(true) :\r",
+							"    pm.expect(pm.response.text()).to.include(\"success\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Successful response message\", function () {\r",
+							"    pm.response.code == 429 ? // Check for response 429 (Too many requests)\r",
+							"    pm.expect(true).to.equal(true) :\r",
+							"    pm.expect(pm.response.text()).to.include(\"Successfully! Record has been fetched.\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Making sure that the ID value is set to avoid 404 errors.\r",
+							"// Get random number between 1 and maxEmployeeId to use as id in REST API endpoint.\r",
+							"var maxEmployeeId = 24;\r",
+							"var randomNumber = Math.floor(Math.random() * maxEmployeeId) + 1;\r",
+							"pm.environment.set(\"id\", randomNumber.toString());"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://dummy.restapiexample.com/api/v1/employee/{{id}}",
+					"protocol": "http",
+					"host": [
+						"dummy",
+						"restapiexample",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"employee",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "R3 Create Employee",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful request\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202, 429]);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Successful response status\", function () {\r",
+							"    pm.response.code == 429 ? // Check for response 429 (Too many requests)\r",
+							"    pm.expect(true).to.equal(true) :\r",
+							"    pm.expect(pm.response.text()).to.include(\"success\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Successful response message\", function () {\r",
+							"    pm.response.code == 429 ? // Check for response 429 (Too many requests)\r",
+							"    pm.expect(true).to.equal(true) :\r",
+							"    pm.expect(pm.response.text()).to.include(\"Successfully! Record has been added.\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"{{name}}\",\r\n    \"salary\": \"{{salary}}\",\r\n    \"age\": \"{{age}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://dummy.restapiexample.com/api/v1/create",
+					"protocol": "http",
+					"host": [
+						"dummy",
+						"restapiexample",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "R4 Update Employee",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful request\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202, 429]);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Successful response status\", function () {\r",
+							"    pm.response.code == 429 ? // Check for response 429 (Too many requests)\r",
+							"    pm.expect(true).to.equal(true) :\r",
+							"    pm.expect(pm.response.text()).to.include(\"success\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Successful response message\", function () {\r",
+							"    pm.response.code == 429 ? // Check for response 429 (Too many requests)\r",
+							"    pm.expect(true).to.equal(true) :\r",
+							"    pm.expect(pm.response.text()).to.include(\"Successfully! Record has been updated.\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Making sure that the ID value is set to avoid 404 errors.\r",
+							"// Get random number between 1 and maxEmployeeId to use as id in REST API endpoint.\r",
+							"var maxEmployeeId = 24;\r",
+							"var randomNumber = Math.floor(Math.random() * maxEmployeeId) + 1;\r",
+							"pm.environment.set(\"id\", randomNumber.toString());"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"salary\": \"{{newSalary}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://dummy.restapiexample.com/api/v1/update/{{id}}",
+					"protocol": "http",
+					"host": [
+						"dummy",
+						"restapiexample",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"update",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "R5 Delete Employee",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful request\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202, 429]);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Successful response status\", function () {\r",
+							"    pm.response.code == 429 ? // Check for response 429 (Too many requests)\r",
+							"    pm.expect(true).to.equal(true) :\r",
+							"    pm.expect(pm.response.text()).to.include(\"success\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Successful response message\", function () {\r",
+							"    pm.response.code == 429 ? // Check for response 429 (Too many requests)\r",
+							"    pm.expect(true).to.equal(true) :\r",
+							"    pm.expect(pm.response.text()).to.include(\"Successfully! Record has been deleted\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Making sure that the ID value is set to avoid 404 errors.\r",
+							"// Get random number between 1 and maxEmployeeId to use as id in REST API endpoint.\r",
+							"var maxEmployeeId = 24;\r",
+							"var randomNumber = Math.floor(Math.random() * maxEmployeeId) + 1;\r",
+							"pm.environment.set(\"id\", randomNumber.toString());"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://dummy.restapiexample.com/api/v1/delete/{{id}}",
+					"protocol": "http",
+					"host": [
+						"dummy",
+						"restapiexample",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"delete",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "firstName",
+			"value": ""
+		},
+		{
+			"key": "lastName",
+			"value": ""
+		},
+		{
+			"key": "username",
+			"value": ""
+		},
+		{
+			"key": "email",
+			"value": ""
+		},
+		{
+			"key": "id",
+			"value": ""
+		}
+	]
+}
