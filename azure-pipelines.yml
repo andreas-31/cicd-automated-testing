@@ -149,7 +149,13 @@ stages:
       displayName: Run Regression Tests with Newman
       continueOnError: true
       inputs:
-        script: 'newman run StarterAPIs.json'
+        script: 'newman run "API Regression Test Suite.postman_collection.json" --env-var newSalary="456" --environment DummyRestApiEnvironment.postman_environment.json'
+        workingDirectory: 'automatedtesting/postman'
+    - task: CmdLine@2
+      displayName: Run Data Validation Tests with Newman
+      continueOnError: true
+      inputs:
+        script: 'newman run "API Data Validation Test Suite.postman_collection.json" --environment DummyRestApiEnvironment.postman_environment.json --iteration-data Dummy-REST-API-Data.csv'
         workingDirectory: 'automatedtesting/postman'
 
     #- bash: |
