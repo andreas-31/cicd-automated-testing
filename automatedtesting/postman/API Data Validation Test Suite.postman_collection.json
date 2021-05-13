@@ -6,7 +6,7 @@
 	},
 	"item": [
 		{
-			"name": "V1 Create Single Employee",
+			"name": "V1 Create Employee Data",
 			"event": [
 				{
 					"listen": "test",
@@ -15,17 +15,17 @@
 							"// Define response codes that indacte successful requests.",
 							"// Note: 429 is returned by dummy.restapiexample.com when it considers the number of",
 							"// received requests as being too high.",
-							"pm.test(\"Successful request\", function () {",
+							"pm.test(\"V1 Create Single Employee: Successful request\", function () {",
 							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202, 429]);",
 							"});",
 							"",
-							"pm.test(\"Successful response status\", function () {",
+							"pm.test(\"V1 Create Single Employee: Successful response status\", function () {",
 							"    pm.response.code == 429 ? // Check for response 429 (Too many requests)",
 							"    pm.expect(true).to.equal(true) :",
 							"    pm.expect(pm.response.text()).to.include(\"success\");",
 							"});",
 							"",
-							"pm.test(\"Successful response message\", function () {",
+							"pm.test(\"V1 Create Single Employee: Successful response message\", function () {",
 							"    pm.response.code == 429 ? // Check for response 429 (Too many requests)",
 							"    pm.expect(true).to.equal(true) :",
 							"    pm.expect(pm.response.text()).to.include(\"Successfully! Record has been added.\");",
@@ -80,16 +80,16 @@
 			"response": []
 		},
 		{
-			"name": "V2 Validate Single Employee Data",
+			"name": "V2 Validate Employee Data",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
 							"// Validates that employee data returned by the Dummy REST API is really",
-							"// the data that was sent before to the Dummy REST API.",
+							"// the data that was sent beforehand to the Dummy REST API.",
 							"",
-							"pm.test(\"Successful request\", function () {",
+							"pm.test(\"V2 Validate Employee Data: Successful request\", function () {",
 							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202, 429]);",
 							"});",
 							"",
@@ -99,19 +99,19 @@
 							"    json = pm.response.json();",
 							"}",
 							"",
-							"pm.test(\"Validate name\", function () {",
+							"pm.test(\"V2 Validate Employee Data: Validate name\", function () {",
 							"    pm.response.code == 429 ? // Check for response 429 (Too many requests)",
 							"    pm.expect(true).to.equal(true) :",
 							"    pm.expect(json.data.employee_name).to.eql(pm.iterationData.get(\"name\"));",
 							"});",
 							"",
-							"pm.test(\"Validate salary\", function () {",
+							"pm.test(\"V2 Validate Employee Data: Validate salary\", function () {",
 							"    pm.response.code == 429 ? // Check for response 429 (Too many requests)",
 							"    pm.expect(true).to.equal(true) :",
 							"    pm.expect(json.data.employee_salary).to.eql(pm.iterationData.get(\"salary\"));",
 							"});",
 							"",
-							"pm.test(\"Validate age\", function () {",
+							"pm.test(\"V2 Validate Employee Data: Validate age\", function () {",
 							"    pm.response.code == 429 ? // Check for response 429 (Too many requests)",
 							"    pm.expect(true).to.equal(true) :",
 							"    pm.expect(json.data.employee_age).to.eql(pm.iterationData.get(\"age\"));",
