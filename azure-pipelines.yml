@@ -149,14 +149,24 @@ stages:
       displayName: Run Regression Tests with Newman
       continueOnError: true
       inputs:
-        script: 'newman run "API Regression Test Suite.postman_collection.json" --env-var newSalary="456" --environment DummyRestApiEnvironment.postman_environment.json'
-        workingDirectory: 'automatedtesting/postman'
+        script: 'newman run "automatedtesting/postman/API Regression Test Suite.postman_collection.json" --env-var newSalary="456" --environment automatedtesting/postman/DummyRestApiEnvironment.postman_environment.json --reporters cli,junit --reporter-junit-export newmanResults/junitReport-regressionTests.xml'
+        workingDirectory: $(System.DefaultWorkingDirectory)
     - task: CmdLine@2
       displayName: Run Data Validation Tests with Newman
       continueOnError: true
       inputs:
-        script: 'newman run "API Data Validation Test Suite.postman_collection.json" --environment DummyRestApiEnvironment.postman_environment.json --iteration-data Dummy-REST-API-Data.csv'
-        workingDirectory: 'automatedtesting/postman'
+        script: 'newman run "automatedtesting/postman/API Data Validation Test Suite.postman_collection.json" --environment automatedtesting/postman/DummyRestApiEnvironment.postman_environment.json --iteration-data automatedtesting/postman/Dummy-REST-API-Data.csv --reporters cli,junit --reporter-junit-export newmanResults/junitReport-dataValidationTests.xml'
+        workingDirectory: $(System.DefaultWorkingDirectory)
+    
+    - bash: |
+        echo "pwd"
+        pwd
+        echo "ls -la"
+        ls -la
+        echo "ls -la newmanResults"
+        ls -la newmanResults
+      displayName: List Newman Results Files
+      workingDirectory: $(System.DefaultWorkingDirectory)
 
     #- bash: |
     #    set -eu  # fail on error
