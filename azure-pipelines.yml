@@ -168,6 +168,20 @@ stages:
       displayName: List Newman Results Files
       workingDirectory: $(System.DefaultWorkingDirectory)
 
+    - task: PublishTestResults@2
+      displayName: Publish Results of Regression Tests with Newman
+      inputs:
+        testResultsFormat: 'JUnit'
+        testResultsFiles: 'newmanResults/junitReport-regressionTests.xml'
+        testRunTitle: 'Newman Regression Tests'
+    
+    - task: PublishTestResults@2
+      displayName: Publish Results of Data Validation Tests with Newman
+      inputs:
+        testResultsFormat: 'JUnit'
+        testResultsFiles: 'newmanResults/junitReport-dataValidationTests.xml'
+        testRunTitle: 'Newman Data Validation Tests'
+
     #- bash: |
     #    set -eu  # fail on error
     #    terraform destroy -input=false -auto-approve \
