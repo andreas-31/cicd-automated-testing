@@ -248,8 +248,8 @@ stages:
                 pip3 install selenium
                 export PATH=$PATH:some/path
 
-  - deployment: RunLoadTestsWithNewman
-    displayName: 'Load Test Fake API with Newman'
+  - deployment: RunLoadTestsWithJMeter
+    displayName: 'Run JMeter Load Tests'
     environment:
       name: TEST
       resourceType: VirtualMachine
@@ -263,10 +263,26 @@ stages:
               targetType: 'inline'
               script: |
                 #! /bin/bash
-                sudo apt update
-                sudo apt install nodejs
-                nodejs -v # check Node.js version
-                sudo apt install npm
-                npm -v # check npm version
-                npm install -g newman
-                which newman || newman run --help
+                sudo apt update -y
+                sudo apt upgrade -y
+                # install Java Runtime Environment
+                sudo apt install openjdk-11-jre tree -y
+                # check the Java version
+                java -version
+                # download Apache JMeter load testing tool
+                wget https://jmeter.apache.org/[preferred]/jmeter/binaries/apache-jmeter-5.4.1.zip || \
+                  wget http://ftp.cc.uoc.gr/mirrors/apache/jmeter/binaries/apache-jmeter-5.4.1.zip
+                # extract the JMeter archive
+                unzip apache-jmeter-5.4.1.zip
+                # tree
+                tree .
+                # copy JMeter test plan files to JMeter directory
+                cp activities.csv authors.csv books.csv Endurance_Test_Plan_CICD.jmx user.properties apache-jmeter-5.4.1
+                # add JMeter binary directory to PATH environment variable
+                export PATH="$PATH:`pwd`/apache-jmeter-5.4.1/bin"
+                # run JMeter in headless mode (endurance tests)
+                jmeter -n -p user.properties -t Endurance_Test_Plan_CICD.jmx -l resultsJMeterLoadTests.jtl
+                # run JMeter in headless mode (stress tests)
+                # tree
+                tree .
+                # publish results of the JMeter load tests
