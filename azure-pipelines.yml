@@ -243,8 +243,30 @@ stages:
                 pip3 --version
                 python3 -m pip install -U pip
                 
-                
                 sudo apt-get install unzip -y
                 sudo snap install chromium
                 pip3 install selenium
                 export PATH=$PATH:some/path
+
+  - deployment: Run Load Tests with Newman
+    displayName: Load Test Fake API with Newman
+    environment:
+      name: TEST
+      resourceType: VirtualMachine
+      tags: ubuntu
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              script: |
+                #! /bin/bash
+                sudo apt update
+                sudo apt install nodejs
+                nodejs -v # check Node.js version
+                sudo apt install npm
+                npm -v # check npm version
+                npm install -g newman
+                which newman || newman run --help
