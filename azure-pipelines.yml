@@ -248,8 +248,8 @@ stages:
                 pip3 install selenium
                 export PATH=$PATH:some/path
 
-  - deployment: Run Load Tests with Newman
-    displayName: Load Test Fake API with Newman
+  - deployment: RunLoadTestsWithNewman
+    displayName: 'Load Test Fake API with Newman'
     environment:
       name: TEST
       resourceType: VirtualMachine
