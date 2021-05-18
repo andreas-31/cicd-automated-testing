@@ -262,7 +262,7 @@ stages:
           sudo apt update -y
           sudo apt upgrade -y
           # install Java Runtime Environment
-          sudo apt install openjdk-11-jre tree -y
+          sudo apt install openjdk-11-jre -y
           # check the Java version
           java -version
           # print pwd
@@ -289,7 +289,7 @@ stages:
           # JMeter testplan files: activities.csv authors.csv books.csv Endurance_Test_Plan_CICD.jmx user.properties
           echo "====="
           echo "run JMeter in headless mode (endurance tests)"
-          JVM_ARGS="-Xms512m -Xmx512m" jmeter.sh -n -p automatedtesting/jmeter/user.properties -t automatedtesting/jmeter/Endurance_Test_Plan_CICD.jmx -l resultsJMeterLoadTests.jtl –j jmeter.log –e –o reports
+          JVM_ARGS="-Xms512m -Xmx512m" jmeter.sh -n -p automatedtesting/jmeter/user.properties -t automatedtesting/jmeter/Endurance_Test_Plan_CICD.jmx -l resultsJMeterLoadTests.jtl –e –o reports
           echo "====="
           # run JMeter in headless mode (stress tests)
           
