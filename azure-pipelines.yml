@@ -289,9 +289,15 @@ stages:
           export PATH="$PATH:`pwd`/jmeter/bin"
           # run JMeter in headless mode (endurance tests)
           # JMeter testplan files: activities.csv authors.csv books.csv Endurance_Test_Plan_CICD.jmx user.properties
+          jmeter_results_file="resultsJMeterLoadTests.csv"
+          # delete JMeter results file that may exist from earlier pipeline runs
+          if [ -f "$jmeter_results_file" ]; then
+            echo "Deleting $jmeter_results_file !"
+            rm "$jmeter_results_file"
+          fi
           echo "====="
           echo "run JMeter in headless mode (endurance tests)"
-          JVM_ARGS="-Xms512m -Xmx512m" jmeter -n -p automatedtesting/jmeter/user.properties -t automatedtesting/jmeter/Endurance_Test_Plan_CICD.jmx -l resultsJMeterLoadTests.jtl –j jmeter.log –e –o reports
+          JVM_ARGS="-Xms512m -Xmx512m" jmeter -n -t automatedtesting/jmeter/Endurance_Test_Plan_CICD.jmx -l "$jmeter_results_file" -e -o jmeter_report
           echo "====="
           echo "ls -la"
           ls -la
@@ -305,5 +311,5 @@ stages:
     - task: PublishPipelineArtifact@1
       displayName: 'Publish JMeter Report'
       inputs:
-        targetPath: jmeter/reports
-        artifact: jmeter
+        targetPath: jmeter_report
+        artifact: jmeter_report
