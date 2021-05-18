@@ -312,10 +312,35 @@ stages:
           ls -la jmeter/bin
 
           # run JMeter in headless mode (stress tests)
+          echo "====="
+          echo "Starting JMeter in headless mode to run stress tests"
+          jmeter_stress_test_result_file="resultsJMeterStressTests.csv"
+          # delete JMeter results file that may exist from earlier pipeline runs
+          if [ -f "$jmeter_stress_test_result_file" ]; then
+            echo "Deleting $jmeter_stress_test_result_file !"
+            rm "$jmeter_stress_test_result_file"
+          fi
+          JVM_ARGS="-Xms512m -Xmx512m" jmeter -n -t automatedtesting/jmeter/Stress_Test_Plan_CICD.jmx -l "$jmeter_stress_test_result_file" -e -o jmeter_report_stress_tests
+          # create ZIP file of stress test results directory
+          zip -r jmeter_report_stress_tests.zip jmeter_report_stress_tests
+          echo "====="
+
+          # Output file listings to check generated files and directories
+          echo "ls -la"
+          ls -la
+          echo "ls -la jmeter"
+          ls -la jmeter
+          echo "ls -la jmeter/bin"
+          ls -la jmeter/bin
           
-          # publish results of the JMeter load tests
     - task: PublishPipelineArtifact@1
       displayName: 'Publish JMeter Report Endurance Tests'
       inputs:
         targetPath: jmeter_report_endurance_tests.zip
         artifact: jmeter_report_endurance_tests
+    
+    - task: PublishPipelineArtifact@1
+      displayName: 'Publish JMeter Report Stress Tests'
+      inputs:
+        targetPath: jmeter_report_stress_tests.zip
+        artifact: jmeter_report_stress_tests
