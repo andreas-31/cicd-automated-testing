@@ -259,10 +259,10 @@ stages:
         targetType: 'inline'
         script: |
           #! /bin/bash
-          sudo apt update -y
-          sudo apt upgrade -y
+          #sudo apt update -y
+          #sudo apt upgrade -y
           # install Java Runtime Environment
-          sudo apt install openjdk-11-jre -y
+          sudo apt-get install openjdk-11-jre -y
           # check the Java version
           java -version
           # print pwd
@@ -283,14 +283,27 @@ stages:
             unzip apache-jmeter-5.4.1.zip
           fi
           
+          # rename the JMeter directory to a standard name
+          mv "$jmeter_file" jmeter
           # add JMeter binary directory to PATH environment variable
-          export PATH="$PATH:`pwd`/apache-jmeter-5.4.1/bin"
+          export PATH="$PATH:`pwd`/jmeter/bin"
           # run JMeter in headless mode (endurance tests)
           # JMeter testplan files: activities.csv authors.csv books.csv Endurance_Test_Plan_CICD.jmx user.properties
           echo "====="
           echo "run JMeter in headless mode (endurance tests)"
-          JVM_ARGS="-Xms512m -Xmx512m" jmeter.sh -n -p automatedtesting/jmeter/user.properties -t automatedtesting/jmeter/Endurance_Test_Plan_CICD.jmx -l resultsJMeterLoadTests.jtl –e –o reports
+          JVM_ARGS="-Xms512m -Xmx512m" jmeter -n -p automatedtesting/jmeter/user.properties -t automatedtesting/jmeter/Endurance_Test_Plan_CICD.jmx -l resultsJMeterLoadTests.jtl –j jmeter.log –e –o reports
           echo "====="
+          echo "ls -la"
+          ls -la
+          echo "ls -la jmeter"
+          ls -la jmeter
+          echo "ls -la jmeter/bin"
+          ls -la jmeter/bin
           # run JMeter in headless mode (stress tests)
           
           # publish results of the JMeter load tests
+    - task: PublishPipelineArtifact@1
+      displayName: 'Publish JMeter Report'
+      inputs:
+        targetPath: jmeter/reports
+        artifact: jmeter
