@@ -284,7 +284,7 @@ stages:
           fi
           
           # rename the JMeter directory to a standard name
-          mv "$jmeter_file" jmeter
+          mv "$jmeter_directory" jmeter
           # add JMeter binary directory to PATH environment variable
           export PATH="$PATH:`pwd`/jmeter/bin"
           # run JMeter in headless mode (endurance tests)
