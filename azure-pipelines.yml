@@ -270,10 +270,18 @@ stages:
                 # check the Java version
                 java -version
                 # download Apache JMeter load testing tool
-                wget https://jmeter.apache.org/[preferred]/jmeter/binaries/apache-jmeter-5.4.1.zip || \
-                  wget http://ftp.cc.uoc.gr/mirrors/apache/jmeter/binaries/apache-jmeter-5.4.1.zip
+                jmeter_file="apache-jmeter-5.4.1.zip"
+                if [ ! -f "$jmeter_file" ]; then
+                  echo "File $jmeter_file not found! Downloading ..."
+                  wget "https://jmeter.apache.org/[preferred]/jmeter/binaries/$jmeter_file" || \
+                    wget "http://ftp.cc.uoc.gr/mirrors/apache/jmeter/binaries/$jmeter_file"
+                fi
                 # extract the JMeter archive
-                unzip apache-jmeter-5.4.1.zip
+                jmeter_directory="apache-jmeter-5.4.1"
+                if [ ! -d "$jmeter_directory" ]; then
+                  echo "Directory $jmeter_directory not found! Extracting ZIP archive ..."
+                  unzip apache-jmeter-5.4.1.zip
+                fi
                 # tree
                 tree .
                 # copy JMeter test plan files to JMeter directory
