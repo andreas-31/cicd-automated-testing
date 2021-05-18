@@ -234,6 +234,7 @@ stages:
                 sudo apt-get upgrade -y
                 sudo apt-get install python3-distutils -y
                 sudo apt-get install python3-apt -y
+                sudo apt-get install unzip -y
 
                 # install python pip
                 # sudo apt-get install python3-pip -y
@@ -243,10 +244,34 @@ stages:
                 pip3 --version
                 python3 -m pip install -U pip
                 
-                sudo apt-get install unzip -y
                 sudo snap install chromium
                 pip3 install selenium
-                export PATH=$PATH:some/path
+                # check if chromedriver is already installed
+                if [ ! -f "/usr/local/share/chromedriver" ]; then
+                  echo "Downloading chromedriver ..."
+                  wget https://chromedriver.storage.googleapis.com/90.0.4430.24/chromedriver_linux64.zip
+                  unzip chromedriver_linux64.zip
+                  chmod +x chromedriver
+
+                  sudo mv -f chromedriver /usr/local/share/chromedriver
+                  sudo ln -s /usr/local/share/chromedriver /usr/local/bin/chromedriver
+                  sudo ln -s /usr/local/share/chromedriver /usr/bin/chromedriver
+                fi
+
+                # dowload python script with test cases
+                wget https://raw.githubusercontent.com/andreas-31/cicd-automated-testing/main/automatedtesting/selenium/login.py
+
+                # running functional UI tests with Selenium in headless mode
+                python3 ./login.py | tee ./selenium_logfile.txt
+
+                # check files
+                echo "pwd: `pwd`"
+                echo "ls -la"
+                ls -la
+                echo "ls -la automatedtesting/selenium"
+                ls -la automatedtesting/selenium
+                echo "cat ./selenium_logfile.txt"
+                cat ./selenium_logfile.txt
 
   - job: RunLoadTestsWithJMeter
     displayName: 'JMeter Setup And Run'
