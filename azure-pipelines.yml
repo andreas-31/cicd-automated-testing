@@ -277,11 +277,14 @@ stages:
                 # tree
                 tree .
                 # copy JMeter test plan files to JMeter directory
-                cp activities.csv authors.csv books.csv Endurance_Test_Plan_CICD.jmx user.properties apache-jmeter-5.4.1
+                #cp activities.csv authors.csv books.csv Endurance_Test_Plan_CICD.jmx user.properties apache-jmeter-5.4.1
                 # add JMeter binary directory to PATH environment variable
                 export PATH="$PATH:`pwd`/apache-jmeter-5.4.1/bin"
                 # run JMeter in headless mode (endurance tests)
-                jmeter -n -p user.properties -t Endurance_Test_Plan_CICD.jmx -l resultsJMeterLoadTests.jtl
+                echo "====="
+                echo "run JMeter in headless mode (endurance tests)"
+                JVM_ARGS="-Xms512m -Xmx512m" jmeter.sh -n -p user.properties -t automatedtesting/jmeter/Endurance_Test_Plan_CICD.jmx -l resultsJMeterLoadTests.jtl –j jmeter.log –e –o reports
+                echo "====="
                 # run JMeter in headless mode (stress tests)
                 # tree
                 tree .
