@@ -262,7 +262,7 @@ stages:
           #sudo apt update -y
           #sudo apt upgrade -y
           # install Java Runtime Environment
-          sudo apt-get install openjdk-11-jre -y
+          sudo apt-get install openjdk-11-jre zip -y
           # check the Java version
           java -version
           # print pwd
@@ -287,29 +287,35 @@ stages:
           mv "$jmeter_directory" jmeter
           # add JMeter binary directory to PATH environment variable
           export PATH="$PATH:`pwd`/jmeter/bin"
+          
           # run JMeter in headless mode (endurance tests)
           # JMeter testplan files: activities.csv authors.csv books.csv Endurance_Test_Plan_CICD.jmx user.properties
-          jmeter_results_file="resultsJMeterLoadTests.csv"
+          echo "====="
+          echo "Starting JMeter in headless mode to run endurance tests"
+          jmeter_endurance_test_result_file="resultsJMeterEnduranceTests.csv"
           # delete JMeter results file that may exist from earlier pipeline runs
-          if [ -f "$jmeter_results_file" ]; then
-            echo "Deleting $jmeter_results_file !"
-            rm "$jmeter_results_file"
+          if [ -f "$jmeter_endurance_test_result_file" ]; then
+            echo "Deleting $jmeter_endurance_test_result_file !"
+            rm "$jmeter_endurance_test_result_file"
           fi
+          JVM_ARGS="-Xms512m -Xmx512m" jmeter -n -t automatedtesting/jmeter/Endurance_Test_Plan_CICD.jmx -l "$jmeter_endurance_test_result_file" -e -o jmeter_report_endurance_tests
+          # create ZIP file of endurance test results directory
+          zip -r jmeter_report_endurance_tests.zip jmeter_report_endurance_tests
           echo "====="
-          echo "run JMeter in headless mode (endurance tests)"
-          JVM_ARGS="-Xms512m -Xmx512m" jmeter -n -t automatedtesting/jmeter/Endurance_Test_Plan_CICD.jmx -l "$jmeter_results_file" -e -o jmeter_report
-          echo "====="
+
+          # Output file listings to check generated files and directories
           echo "ls -la"
           ls -la
           echo "ls -la jmeter"
           ls -la jmeter
           echo "ls -la jmeter/bin"
           ls -la jmeter/bin
+
           # run JMeter in headless mode (stress tests)
           
           # publish results of the JMeter load tests
     - task: PublishPipelineArtifact@1
-      displayName: 'Publish JMeter Report'
+      displayName: 'Publish JMeter Report Endurance Tests'
       inputs:
-        targetPath: jmeter_report
-        artifact: jmeter_report
+        targetPath: jmeter_report_endurance_tests.zip
+        artifact: jmeter_report_endurance_tests
