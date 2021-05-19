@@ -1,0 +1,71 @@
+Time,Category,Message
+2021-05-19 07:21:49,chrome,Starting the browser...
+2021-05-19 07:21:54,chrome,Browser started successfully. Navigating to URL: https://www.saucedemo.com/
+2021-05-19 07:21:54,chrome,We are on the login page.
+2021-05-19 07:22:01,screenshot,"Screenshot ""01_login_page.png"" successfully created."
+2021-05-19 07:22:01,login,=== LOGIN ===
+2021-05-19 07:22:01,login,Trying to login as user standard_user
+2021-05-19 07:22:04,login,Clicking on the login button
+2021-05-19 07:22:04,login,Checking that login was successful.
+2021-05-19 07:22:04,login,"OK: Login to URL ""https://www.saucedemo.com/"" with user name ""standard_user"" successful!"
+2021-05-19 07:22:04,mainpage,=== ADD ITEMS ===
+2021-05-19 07:22:04,mainpage,We are on the main page.
+2021-05-19 07:22:04,mainpage,Looking for items to add to cart
+2021-05-19 07:22:04,mainpage,"Adding to cart item 1: ""Sauce Labs Backpack"""
+2021-05-19 07:22:04,mainpage,"Adding to cart item 2: ""Sauce Labs Bike Light"""
+2021-05-19 07:22:04,mainpage,"Adding to cart item 3: ""Sauce Labs Bolt T-Shirt"""
+2021-05-19 07:22:04,mainpage,"Adding to cart item 4: ""Sauce Labs Fleece Jacket"""
+2021-05-19 07:22:04,mainpage,"Adding to cart item 5: ""Sauce Labs Onesie"""
+2021-05-19 07:22:05,mainpage,"Adding to cart item 6: ""Test.allTheThings() T-Shirt (Red)"""
+2021-05-19 07:22:05,screenshot,"Screenshot ""02_main_page_items_added.png"" successfully created."
+2021-05-19 07:22:05,shoppingcart,=== CHECK SHOPPING CART ===
+2021-05-19 07:22:05,shoppingcart,Opening shopping cart to check listed items
+2021-05-19 07:22:05,shoppingcart,We are on the shopping cart page.
+2021-05-19 07:22:06,screenshot,"Screenshot ""03_shopping_cart_page.png"" successfully created."
+2021-05-19 07:22:06,shoppingcart,Checking that previously added 6 items are really in the shopping cart
+2021-05-19 07:22:06,shoppingcart,"Sauce Labs Backpack, Sauce Labs Bike Light, Sauce Labs Bolt T-Shirt, Sauce Labs Fleece Jacket, Sauce Labs Onesie, Test.allTheThings() T-Shirt (Red)"
+2021-05-19 07:22:06,shoppingcart,"Checking item 1: ""Sauce Labs Backpack"""
+2021-05-19 07:22:06,shoppingcart,"OK: item ""Sauce Labs Backpack"" is in the shopping cart!"
+2021-05-19 07:22:06,shoppingcart,"Checking item 2: ""Sauce Labs Bike Light"""
+2021-05-19 07:22:06,shoppingcart,"OK: item ""Sauce Labs Bike Light"" is in the shopping cart!"
+2021-05-19 07:22:06,shoppingcart,"Checking item 3: ""Sauce Labs Bolt T-Shirt"""
+2021-05-19 07:22:06,shoppingcart,"OK: item ""Sauce Labs Bolt T-Shirt"" is in the shopping cart!"
+2021-05-19 07:22:06,shoppingcart,"Checking item 4: ""Sauce Labs Fleece Jacket"""
+2021-05-19 07:22:06,shoppingcart,"OK: item ""Sauce Labs Fleece Jacket"" is in the shopping cart!"
+2021-05-19 07:22:06,shoppingcart,"Checking item 5: ""Sauce Labs Onesie"""
+2021-05-19 07:22:06,shoppingcart,"OK: item ""Sauce Labs Onesie"" is in the shopping cart!"
+2021-05-19 07:22:06,shoppingcart,"Checking item 6: ""Test.allTheThings() T-Shirt (Red)"""
+2021-05-19 07:22:06,shoppingcart,"OK: item ""Test.allTheThings() T-Shirt (Red)"" is in the shopping cart!"
+2021-05-19 07:22:06,shoppingcart,=== REMOVE ITEMS ===
+2021-05-19 07:22:06,shoppingcart,Removing items from the shopping cart
+2021-05-19 07:22:06,shoppingcart,"Removing item 1: ""Sauce Labs Backpack"""
+2021-05-19 07:22:06,shoppingcart,"Click on remove button for item ""Sauce Labs Backpack"""
+2021-05-19 07:22:06,screenshot,"Screenshot ""04_shopping_cart_page_item_1_removed.png"" successfully created."
+2021-05-19 07:22:06,shoppingcart,"Checking that item ""Sauce Labs Backpack"" has really been removed from shopping cart"
+2021-05-19 07:22:06,shoppingcart,"OK: item ""Sauce Labs Backpack"" has been removed from shopping cart!"
+2021-05-19 07:22:06,shoppingcart,"Removing item 2: ""Sauce Labs Bike Light"""
+2021-05-19 07:22:06,shoppingcart,"Click on remove button for item ""Sauce Labs Bike Light"""
+2021-05-19 07:22:07,screenshot,"Screenshot ""04_shopping_cart_page_item_2_removed.png"" successfully created."
+2021-05-19 07:22:07,shoppingcart,"Checking that item ""Sauce Labs Bike Light"" has really been removed from shopping cart"
+2021-05-19 07:22:07,shoppingcart,"OK: item ""Sauce Labs Bike Light"" has been removed from shopping cart!"
+2021-05-19 07:22:07,shoppingcart,"Removing item 3: ""Sauce Labs Bolt T-Shirt"""
+2021-05-19 07:22:07,shoppingcart,"Click on remove button for item ""Sauce Labs Bolt T-Shirt"""
+2021-05-19 07:22:07,screenshot,"Screenshot ""04_shopping_cart_page_item_3_removed.png"" successfully created."
+2021-05-19 07:22:07,shoppingcart,"Checking that item ""Sauce Labs Bolt T-Shirt"" has really been removed from shopping cart"
+2021-05-19 07:22:07,shoppingcart,"OK: item ""Sauce Labs Bolt T-Shirt"" has been removed from shopping cart!"
+2021-05-19 07:22:07,shoppingcart,"Removing item 4: ""Sauce Labs Fleece Jacket"""
+2021-05-19 07:22:07,shoppingcart,"Click on remove button for item ""Sauce Labs Fleece Jacket"""
+2021-05-19 07:22:07,screenshot,"Screenshot ""04_shopping_cart_page_item_4_removed.png"" successfully created."
+2021-05-19 07:22:07,shoppingcart,"Checking that item ""Sauce Labs Fleece Jacket"" has really been removed from shopping cart"
+2021-05-19 07:22:07,shoppingcart,"OK: item ""Sauce Labs Fleece Jacket"" has been removed from shopping cart!"
+2021-05-19 07:22:07,shoppingcart,"Removing item 5: ""Sauce Labs Onesie"""
+2021-05-19 07:22:07,shoppingcart,"Click on remove button for item ""Sauce Labs Onesie"""
+2021-05-19 07:22:08,screenshot,"Screenshot ""04_shopping_cart_page_item_5_removed.png"" successfully created."
+2021-05-19 07:22:08,shoppingcart,"Checking that item ""Sauce Labs Onesie"" has really been removed from shopping cart"
+2021-05-19 07:22:08,shoppingcart,"OK: item ""Sauce Labs Onesie"" has been removed from shopping cart!"
+2021-05-19 07:22:08,shoppingcart,"Removing item 6: ""Test.allTheThings() T-Shirt (Red)"""
+2021-05-19 07:22:08,shoppingcart,"Click on remove button for item ""Test.allTheThings() T-Shirt (Red)"""
+2021-05-19 07:22:08,screenshot,"Screenshot ""04_shopping_cart_page_item_6_removed.png"" successfully created."
+2021-05-19 07:22:08,shoppingcart,"Checking that item ""Test.allTheThings() T-Shirt (Red)"" has really been removed from shopping cart"
+2021-05-19 07:22:08,shoppingcart,"OK: item ""Test.allTheThings() T-Shirt (Red)"" has been removed from shopping cart!"
+2021-05-19 07:22:08,chrome,All UI tests with Selenium finshed successfully!
