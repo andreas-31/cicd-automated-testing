@@ -216,7 +216,7 @@ stages:
               appType: webApp
               package: $(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip
   - deployment: VMDeploy
-    displayName: Deploy Selenium to Ubuntu VM
+    displayName: Deploy and Run Selenium on Ubuntu VM
     environment:
       name: TEST
       resourceType: VirtualMachine
@@ -226,6 +226,7 @@ stages:
         deploy:
           steps:
           - task: Bash@3
+            displayName: 'Deploy and Run Selenium'
             inputs:
               targetType: 'inline'
               script: |
@@ -259,7 +260,7 @@ stages:
                 fi
 
                 # dowload python script with test cases
-                wget https://raw.githubusercontent.com/andreas-31/cicd-automated-testing/main/automatedtesting/selenium/login.py
+                wget -O login.py https://raw.githubusercontent.com/andreas-31/cicd-automated-testing/main/automatedtesting/selenium/login.py
 
                 # running functional UI tests with Selenium in headless mode
                 python3 ./login.py | tee ./selenium_logfile.txt
