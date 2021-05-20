@@ -64,7 +64,7 @@ def login (username, password):
         writer.writerow([now(), 'login', msg])
 
         msg = '=== ADD ITEMS ==='
-        print('\n{msg}')
+        print(f'\n{msg}')
         writer.writerow([now(), 'mainpage', msg])
         msg = 'We are on the main page.'
         print(msg)
@@ -124,7 +124,7 @@ def login (username, password):
             writer.writerow([now(), 'shoppingcart', msg])
 
         msg = '=== REMOVE ITEMS ==='
-        print('\n{msg}')
+        print(f'\n{msg}')
         writer.writerow([now(), 'shoppingcart', msg])
         msg = 'Removing items from the shopping cart'
         print(msg)
