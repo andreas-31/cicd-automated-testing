@@ -1,27 +1,15 @@
 #!/usr/bin/env python3
-#import requests
-#import hashlib
-#import hmac
-#import base64
 import logging
-#import urllib3
 import json
 import csv
-#import datetime
-from LogAnalyticsDataCollector import post_data, build_signature
-from sys import exit
+import sys
+from LogAnalyticsDataCollector import post_data
 
-azure_analytics_workspace_json_file = 'azure_analytics_workspace.json'
-with open(azure_analytics_workspace_json_file, "r") as jsonfile:
-    data = json.load(jsonfile)
-    print("Read successful")
-print(data)
+azure_log_customer_id = sys.argv[1]
+azure_log_shared_key = sys.argv[2]
 
-azure_log_customer_id = data['azure_log_customer_id']
-azure_log_shared_key = data['azure_log_shared_key']
-
-# read logs from CSV logfile and write it to Azure Monitor
-# Log Analytics table.
+# read logs from CSV logfile and write it to
+# Azure Monitor Log Analytics table.
 csv_logfile = 'seleniumLogfile.csv'
 table_name = 'seleniumLogsMonitor'
 with open('seleniumLogfile.csv') as csvDataFile:
