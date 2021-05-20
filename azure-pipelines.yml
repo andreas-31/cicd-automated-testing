@@ -273,6 +273,9 @@ stages:
                 ls -la automatedtesting/selenium
                 echo "cat ./selenium_logfile.txt"
                 cat ./selenium_logfile.txt
+                
+                # ingest Selenium logs into Azure Monitor Log Analytics
+                python3 ./ingest_logs_into_azure_monitor.py $(AZURE_LOG_CUSTOMER_ID) $(AZURE_LOG_SHARED_KEY)
 
   - job: RunLoadTestsWithJMeter
     displayName: 'JMeter Setup And Run'
