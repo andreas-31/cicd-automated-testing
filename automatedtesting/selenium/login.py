@@ -7,12 +7,7 @@ import os
 
 # Start the browser and login with standard_user
 def login (username, password):
-    csv_logfile = 'seleniumLogfile_{}.csv'.format(datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
-    home = os.path.expanduser("~")
-    log_directory = os.path.join(home, 'logfiles')
-    log_directory = os.path.join(log_directory, 'selenium')
-    os.makedirs(log_directory)
-    csv_logfile = os.path.join(log_directory, csv_logfile)
+    csv_logfile = 'seleniumLogfile.csv'
     print(f'Logging to logfile "{csv_logfile}"')
     with open(csv_logfile, 'w') as file:
         writer = csv.writer(file)
