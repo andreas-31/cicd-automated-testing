@@ -275,6 +275,7 @@ stages:
                 cat ./selenium_logfile.txt
                 
                 # ingest Selenium logs into Azure Monitor Log Analytics
+                wget -O ingest_logs_into_azure_monitor.py https://raw.githubusercontent.com/andreas-31/cicd-automated-testing/main/automatedtesting/selenium/ingest_logs_into_azure_monitor.py
                 python3 ./ingest_logs_into_azure_monitor.py $(AZURE_LOG_CUSTOMER_ID) $(AZURE_LOG_SHARED_KEY)
 
   - job: RunLoadTestsWithJMeter
