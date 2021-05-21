@@ -50,3 +50,10 @@ The API Data Validation Test Suite first creating employee data and then validat
 ### Deployment Stage
 #### Deploy Fake REST API Artifact to Azure App Services
 The application package (ZIP file) containing the web app is deployed to the app service that has earlier been created by Terraform in the build stage. Azure App Service registers a domain name for the web app 
+
+#### Deploy and Run Selenium on Ubuntu VM
+Functional UI test are run in Python scripts by using the [Selenium WebDriver](https://pypi.org/project/selenium/) Python module and the [chromedriver](https://sites.google.com/a/chromium.org/chromedriver/downloads) driver for controlling the Chromium web browser in non-GUI mode.
+
+The test website [saucedemo.com/](https://www.saucedemo.com/) is used for running functional UI tests like logging into the webshop, adding items to the shopping cart, and then removing items again. After adding or removing an item, it is verified that the item is really in or no longer in the shopping cart, respectively.
+
+#### Run Load Tests With JMeter and Publish Them
