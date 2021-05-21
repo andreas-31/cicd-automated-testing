@@ -26,9 +26,27 @@ Terraform has been configured to store state remotely in Azure storage account b
 |:--:| 
 | *Azure Storage Explorer showing Terraform state files (.tfstate) files stored in Azure storage account.* |
 
-#### Create Fake REST API Artifact (ZIP File)
+#### Build Fake REST API Artifact (ZIP File)
+An ASP.NET application that implements a Fake REST API is stored in the subdirectory ```automatedtesting/jmeter/fakerestapi``` within this GitHub repository. That subdirectory is zipped and the ZIP file is stored as artifact in Azure DevOps. The application package will later be deployed in the deployment stage to Azure App Services.
 
 #### API Integration Tests with Newman (Postman)
-Newman is installed. Regression tests and Data Validation tests are run. The results of both test suites are published as artifacts in the pipeline.
+Newman is installed via npm (Node.js package manager). The API Regression Test Suite and the API Data Validation Test Suite are located in the subdirectory ```automatedtesting/postman``` and are run with Newman. The results of both test suites are published into Azure DevOps Test Hub where the results are summarized and visualized.
+
+The API Regression Test Suite checks all API endpoints for successful response status codes and messages:
+|Regression Testcase |API Endpoint |
+|--- | --- |
+|R1 Get All Employees|http://dummy.restapiexample.com/api/v1/employees|
+|R2 Get Single Employee |http://dummy.restapiexample.com/api/v1/employee/{{id}}|
+|R3 Create Employee |http://dummy.restapiexample.com/api/v1/create|
+|R4 Update Employee |http://dummy.restapiexample.com/api/v1/update/{{id}}|
+|R5 Delete Employee |http://dummy.restapiexample.com/api/v1/delete/{{id}}|
+
+The API Data Validation Test Suite first creating employee data and then validates that the employee data has been correctly provided by the web application:
+|Data Validation Testcase |API Endpoint |
+|--- | --- |
+|V1 Create Employee Data |http://dummy.restapiexample.com/api/v1/create|
+|V2 Validate Employee Data |http://dummy.restapiexample.com/api/v1/employee/{{newId}}|
 
 ### Deployment Stage
+#### Deploy Fake REST API Artifact to Azure App Services
+The application package (ZIP file) containing the web app is deployed to the app service that has earlier been created by Terraform in the build stage. Azure App Service registers a domain name for the web app 
