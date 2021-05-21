@@ -1,5 +1,5 @@
 # Ensuring Quality Releases
-CI/CD pipeline in Azure Pipelines (DevOps) for automated building, deployment, and testing, monitoring, and logging.
+CI/CD pipeline in Azure DevOps for automated building, deployment, and testing, monitoring, and logging.
 
 [![Build Status](https://dev.azure.com/Agaupmann0652/CICD-Automated-Testing/_apis/build/status/andreas-31.cicd-automated-testing?branchName=main)](https://dev.azure.com/Agaupmann0652/CICD-Automated-Testing/_build/latest?definitionId=3&branchName=main)
 
