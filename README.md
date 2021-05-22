@@ -9,10 +9,27 @@ CI/CD pipeline in Azure DevOps for automated building, deployment, testing, moni
 | *Azure DevOps CI/CD Pipeline drives various services and tools for automated building, deployment, testing, monitoring, and logging.* |
 
 ## Azure DevOps
-The subsequently described CI/CD pipeline is defined in the YAML file ```azure-piplines.yaml``` that is contained in this GitHub repository.
+The subsequently described CI/CD pipeline is defined in the YAML file ```azure-piplines.yaml``` that is contained in this GitHub repository. The declarations in the YAML file are evaluated by Azure Pipelines that is part of Azure DevOps. When the pipeline runs, the system begins to run one or more jobs on [Azure Pipelines Agents](https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/agents). An agent is computing infrastructure with installed agent software that runs one job at a time. All except one pipeline steps are executed on Microsoft-hosted agents. The functional UI tests are run on self-hosted agent. It is an Ubuntu 18.04 virtual machine that is created by Terraform and was added to an [Azure Pipelines environment](https://docs.microsoft.com/en-us/azure/devops/pipelines/process/environments) called "TEST". In summary, the following configurations have been made in Azure Pipelines:
+- Declaring and setting of variables in ```azure-piplines.yaml```:
+  * for Azure: azureLocation, azureResourceGroup, azureApplicationType, azureVirtualNetworkName, azureAddressPrefixTest, azureAddressSpace, subscriptionConnection
+  * for Terraform: tf-resource-group-name, tf-storage-account-name, tf-container-name, tf-blob-key-name, terraformDirectory
 
-## Description of the Stages of the CI/CD Pipeline
+## Description of the CI/CD Pipeline
+### Structure of the CI/CD Pipeline
+
+| ![Azure Pipelines showing the two stages of the CI/CD pipeline: Build and Deployment](https://user-images.githubusercontent.com/20167788/119217972-156e7a80-bade-11eb-8552-bb91812958fa.PNG) | 
+|:--:| 
+| *Azure Pipelines showing the two stages of the CI/CD pipeline: Build and Deployment.* |
+
+| ![Azure Pipelines showing jobs for each stage](https://user-images.githubusercontent.com/20167788/119217974-16071100-bade-11eb-9ab2-a1c285e4f307.PNG) | 
+|:--:| 
+| *Azure Pipelines showing jobs for each stage.* |
+
 ### Build Stage
+The Build stage performs several steps:
+- Terraform: credentials, initialize, validate, plan, apply, show
+- Newman: install, run, publish results
+- Webapp Artifact: Create and upload ZIP archive containing Fake REST API webapp
 #### Terraform (Infrastructure as Code)
 Terraform is used in the CI/CD pipeline to provision and manage resources in Azure cloud. In order to allow Terraform to create resources in Azure, a [Service Connection](https://docs.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints?view=azure-devops&tabs=yaml) to Azure Resource Manager (ARM) using service principal authentication has been configured in the Project Settings in Azure DevOps. Terraform uses the Azure credentials that are made available by the service connection as environment variables: ARM_CLIENT_ID, ARM_CLIENT_SECRET, ARM_SUBSCRIPTION_ID, and ARM_TENANT_ID.
 
