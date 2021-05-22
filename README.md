@@ -155,6 +155,20 @@ The Stress Test Plan is designed to send many HTTP requests in a short amount of
 |:--:| 
 | *JMeter Stress Test Plan: "GET All" queries executed by 30 users over 30 seconds.* |
 
+##### Azure Pipelines: Publishing of JMeter Test Reports
+
+| ![Azure Pipelines: list of pipeline artifacts showing zipped JMeter test reports](https://user-images.githubusercontent.com/20167788/119227438-2b942f00-bb0e-11eb-9f46-c674b3922eca.PNG) | 
+|:--:| 
+| *Azure Pipelines: list of pipeline artifacts showing zipped JMeter HTML reports for endurance and stress tests.* |
+
+| ![JMeter Endurance Test Report (HTML format)](https://user-images.githubusercontent.com/20167788/119227757-c7726a80-bb0f-11eb-9f3a-a8e927bb33e6.PNG) | 
+|:--:| 
+| *JMeter Endurance Test Report (HTML format).* |
+
+| ![JMeter Stress Test Report (HTML format)](https://user-images.githubusercontent.com/20167788/119227759-c80b0100-bb0f-11eb-8fa0-092b0023ffdf.PNG) | 
+|:--:| 
+| *JMeter Stress Test Report (HTML format).* |
+
 ##### Azure Monitor: Send Alarms by Email
 Azure Monitor alarms have been configured for "cicd-app-AppService" (Fake REST API webapp):
 - AppServiceCPU_TimeAlert: triggers whenever the maximum CPU time is greater than 30
