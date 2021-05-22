@@ -182,8 +182,8 @@ Azure Monitor alarms have been configured for "cicd-app-AppService" (Fake REST A
 
 | ![Azure Monitor: email notification for alert "AppServiceHandleCountAlert", Page 1](https://user-images.githubusercontent.com/20167788/119224456-c6850d00-bafe-11eb-9406-487116e56aa0.PNG) | 
 |:--:| 
-| *Azure Monitor: email notification for alert "AppServiceHandleCountAlert", Page 2.* |
+| *Azure Monitor: email notification for alert "AppServiceHandleCountAlert", Page 1.* |
 
-| ![Azure Monitor: email notification for alert "AppServiceHandleCountAlert", Page 1](https://user-images.githubusercontent.com/20167788/119224457-c6850d00-bafe-11eb-9f25-4981cff20df5.PNG) | 
+| ![Azure Monitor: email notification for alert "AppServiceHandleCountAlert", Page 2](https://user-images.githubusercontent.com/20167788/119224457-c6850d00-bafe-11eb-9f25-4981cff20df5.PNG) | 
 |:--:| 
 | *Azure Monitor: email notification for alert "AppServiceHandleCountAlert", Page 2.* |
