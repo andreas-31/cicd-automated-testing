@@ -40,13 +40,6 @@ stages:
   jobs:
   - job: Build
     steps:
-    - task: InstallSSHKey@0
-      displayName: 'Install an SSH key'
-      inputs:
-        knownHostsEntry: 'SHA256:1Hyr55tsxGifESBMc0s+2NtutnR/4+LOkVwrOGrIp8U johndoe@contoso'
-        sshPublicKey: '$(ssh-public-key)'
-        sshKeySecureFile: 'id_rsa'
-
     - task: ArchiveFiles@2
       displayName: 'Archive FakeRestAPI'
       inputs:
