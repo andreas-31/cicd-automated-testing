@@ -110,7 +110,7 @@ The Selenium CSV logfile is ingested into an Azure Log Analytics workspace. The 
 |:--:| 
 | *Kusto query for displaying all Selenium logs related to removed shopping cart items sorted by time generated.* |
 
-#### Run Load Tests With JMeter and Publish Them
+#### Run Load Tests With JMeter and Publish HTML Test Reports
 In this step, OpenJDK Java Runtime Environment is installed and JMeter tool is downloaded to the Azure Pipelines agent machine. Then, the Endurance Test Plan and the Stress Test Plan are run.
 - Endurance_Test_Plan_CICD.jmx
 - Stress_Test_Plan_CICD.jmx
