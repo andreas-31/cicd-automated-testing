@@ -116,8 +116,44 @@ In this step, OpenJDK Java Runtime Environment is installed and JMeter tool is d
 - Stress_Test_Plan_CICD.jmx
 
 ##### Endurance Test Plan
+The Endurance Test Plan is designed to send 6 HTTP requests every 10 seconds for 1 minute by using these settings:
+- Constant Throughput Timer with Target Throughput of 6 samples per minute (applies to each thread group)
+- Threat Groups:
+  * GET Activity
+  * POST Book
+  * PUT Author
+- Threat Groups configuration
+  * Number of Threads (users): 2
+  * Loop Count: Infinite
+  * Specify Thread Lifetime: duration 60 seconds
+- Parameters and JSON body values for GET, POST, and PUT requests are read from CSV files.
+
+| ![JMeter Endurance Test Plan: Constant Throughput Timer settings](https://user-images.githubusercontent.com/20167788/119222242-a13ed180-baf3-11eb-89ec-0f48bc58c3f2.PNG) | 
+|:--:| 
+| *JMeter Endurance Test Plan: Constant Throughput Timer settings.* |
+
+| ![JMeter Endurance Test Plan: Thread Groups settings](https://user-images.githubusercontent.com/20167788/119222243-a1d76800-baf3-11eb-8e7c-ba0be6285a68.PNG) | 
+|:--:| 
+| *JMeter Endurance Test Plan: Thread Groups settings.* |
+
+| ![JMeter Endurance Test Plan: Parameters and JSON body values for GET, POST, and PUT requests are read from CSV files](https://user-images.githubusercontent.com/20167788/119222244-a26ffe80-baf3-11eb-9abb-2c85d2ecc84e.PNG) | 
+|:--:| 
+| *Parameters and JSON body values for GET, POST, and PUT requests are read from CSV files.* |
+
 ##### Stress Test Plan
+The Stress Test Plan is designed to send many HTTP requests in a short amount of time by using these settings:
+- Threat Groups:
+  * GET All Activities
+  * GET All Books
+  * Get All Authors
+- Threat Groups configuration
+  * Number of Threads (users): 30
+  * Loop Count: Infinite
+  * Specify Thread Lifetime: duration 30 seconds
+
+| ![JMeter Stress Test Plan: "GET All" queries executed by 30 users over 30 seconds](https://user-images.githubusercontent.com/20167788/119222245-a26ffe80-baf3-11eb-8f1e-07634a72a410.PNG) | 
+|:--:| 
+| *JMeter Stress Test Plan: "GET All" queries executed by 30 users over 30 seconds.* |
+
 ##### Azure Monitor: Send Alarms by Email
 
-```
-```
