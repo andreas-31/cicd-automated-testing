@@ -164,6 +164,26 @@ Azure Monitor alarms have been configured for "cicd-app-AppService" (Fake REST A
 |:--:| 
 | *Azure Monitor: alarms configured for App Service "cicd-app-AppService".* |
 
-| ![Azure Monitor: graph showing that alarm triggered because maximum CPU time exceeded 30](https://user-images.githubusercontent.com/20167788/119224452-c553e000-bafe-11eb-9a76-4013dd4ebce6.PNG) | 
+| ![Azure Monitor: graph showing that alarm "AppServiceCPU_TimeAlert" did fire because maximum CPU time exceeded 30 seconds](https://user-images.githubusercontent.com/20167788/119224452-c553e000-bafe-11eb-9a76-4013dd4ebce6.PNG) | 
 |:--:| 
-| *Azure Monitor: graph showing that alarm did fire because maximum CPU time exceeded 30.* |
+| *Azure Monitor: graph showing that alarm "AppServiceCPU_TimeAlert" did fire because maximum CPU time exceeded 30 seconds.* |
+
+| ![Azure Monitor: graph showing that alarm "AppServiceHandleCountAlert" did fire because maximum handle count exceeded 50](https://user-images.githubusercontent.com/20167788/119224446-c38a1c80-bafe-11eb-812a-c21fe4ad2f04.PNG) | 
+|:--:| 
+| *Azure Monitor: graph showing that alarm "AppServiceHandleCountAlert" did fire because maximum handle count exceeded 50.* |
+
+| ![Azure Monitor: email notification for alert "AppServiceCPU_TimeAlert, Page 1" ](https://user-images.githubusercontent.com/20167788/119224450-c4bb4980-bafe-11eb-8217-f9255081c09e.PNG) | 
+|:--:| 
+| *Azure Monitor: email notification for alert "AppServiceCPU_TimeAlert", Page 1.* |
+
+| ![Azure Monitor: email notification for alert "AppServiceCPU_TimeAlert, Page 2" ](https://user-images.githubusercontent.com/20167788/119224451-c553e000-bafe-11eb-8f2a-74dec969568b.PNG) | 
+|:--:| 
+| *Azure Monitor: email notification for alert "AppServiceCPU_TimeAlert", Page 2.* |
+
+| ![Azure Monitor: email notification for alert "AppServiceHandleCountAlert", Page 1](https://user-images.githubusercontent.com/20167788/119224456-c6850d00-bafe-11eb-9406-487116e56aa0.PNG) | 
+|:--:| 
+| *Azure Monitor: email notification for alert "AppServiceHandleCountAlert", Page 2.* |
+
+| ![Azure Monitor: email notification for alert "AppServiceHandleCountAlert", Page 1](https://user-images.githubusercontent.com/20167788/119224457-c6850d00-bafe-11eb-9f25-4981cff20df5.PNG) | 
+|:--:| 
+| *Azure Monitor: email notification for alert "AppServiceHandleCountAlert", Page 2.* |
