@@ -136,7 +136,7 @@ The Endurance Test Plan is designed to send 6 HTTP requests every 10 seconds for
 |:--:| 
 | *JMeter Endurance Test Plan: Thread Groups settings.* |
 
-| ![JMeter Endurance Test Plan: Parameters and JSON body values for GET, POST, and PUT requests are read from CSV files](https://user-images.githubusercontent.com/20167788/119222244-a26ffe80-baf3-11eb-9abb-2c85d2ecc84e.PNG) | 
+| ![JMeter Endurance Test Plan: Parameters and JSON body values for GET, POST, and PUT requests are read from CSV files](https://user-images.githubusercontent.com/20167788/119228189-23d68980-bb12-11eb-88c2-3a56c8fc951a.PNG) | 
 |:--:| 
 | *Parameters and JSON body values for GET, POST, and PUT requests are read from CSV files.* |
 
