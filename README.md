@@ -13,6 +13,11 @@ The subsequently described CI/CD pipeline is defined in the YAML file ```azure-p
 - Declaring and setting of variables in ```azure-piplines.yaml```:
   * for Azure: azureLocation, azureResourceGroup, azureApplicationType, azureVirtualNetworkName, azureAddressPrefixTest, azureAddressSpace, subscriptionConnection
   * for Terraform: tf-resource-group-name, tf-storage-account-name, tf-container-name, tf-blob-key-name, terraformDirectory
+- Declaring and setting of variables in Azure Pipelines Web Interface
+  * SSH public key for Ubuntu VM (id_rsa.pub): ssh-public-key
+  * for Azure Log Analytics: azure_log_customer_id, azure_log_shared_key
+- Definition of Azure pipelines environment "TEST". Adding the Ubuntu VM to this environment with tag "ubuntu".
+- Adding SSH private key (id_rsa) as secure file to Azure Pipelines Library: the ["Install SSH Key"](https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/utility/install-ssh-key) task adds the SSH private key to key manager (ssh-agent) running on Azure Pipelines agents.
 
 ## Description of the CI/CD Pipeline
 ### Structure of the CI/CD Pipeline
@@ -27,6 +32,7 @@ The subsequently described CI/CD pipeline is defined in the YAML file ```azure-p
 
 ### Build Stage
 The Build job in the Build stage performs several steps:
+- Install an SSH Key: installs SSH key on Azure Pipelines agent where the Terraform commands will be run.
 - Terraform: credentials, initialize, validate, plan, apply, show
 - Newman: install, run, publish results
 - Webapp Artifact: Create and upload ZIP archive containing Fake REST API webapp
@@ -35,13 +41,14 @@ Terraform is used in the CI/CD pipeline to provision and manage resources in Azu
 
 Terraform has been configured to store state remotely in Azure storage account by following this tutorial: [Store Terraform state in Azure Storage](https://docs.microsoft.com/en-us/azure/developer/terraform/store-state-in-azure-storage).
 
-| ![Azure resources created by Terraform](https://user-images.githubusercontent.com/20167788/119124719-45ac0f80-ba31-11eb-80cd-02068b97e80f.PNG) | 
-|:--:| 
-| *Azure resources created by Terraform.* |
-
 | ![Azure Storage Explorer showing Terraform state (.tfstate) files stored in Azure storage account](https://user-images.githubusercontent.com/20167788/119124722-4644a600-ba31-11eb-8f1d-eda3bdceca4c.PNG) | 
 |:--:| 
 | *Azure Storage Explorer showing Terraform state files (.tfstate) files stored in Azure storage account.* |
+
+All Azure resources that are created by Terraform are contained in the Azure resource group ```cicd-automated-testing-rg```.
+| ![Azure resources created by Terraform](https://user-images.githubusercontent.com/20167788/119124719-45ac0f80-ba31-11eb-80cd-02068b97e80f.PNG) | 
+|:--:| 
+| *Azure resources created by Terraform.* |
 
 #### Build Fake REST API Artifact (ZIP File)
 An ASP.NET application that implements a Fake REST API is stored in the subdirectory ```automatedtesting/jmeter/fakerestapi``` within this GitHub repository. That subdirectory is zipped and the ZIP file is stored as artifact in Azure DevOps. The application package will later be deployed in the deployment stage to Azure App Services.
