@@ -101,7 +101,7 @@ Functional UI test are defined and run in Python scripts by using the [Selenium 
 
 The test website [saucedemo.com](https://www.saucedemo.com/) is used for running functional UI tests like logging into the webshop, adding items to the shopping cart, and then removing items again. After adding or removing an item, it is verified that the item is really in or no longer in the shopping cart, respectively.
 
-The Python scripts provides information of its status by writing log messages to the CLI as well as a Selenium logfile in CSV format: see [exemplary Selenium logfile in CSV format](cicd-automated-testing/automatedtesting/selenium/seleniumLogfile_2021-05-19_18-25-06.csv).
+The Python scripts provides information of its status by writing log messages to the CLI as well as a Selenium logfile in CSV format: see [exemplary Selenium logfile in CSV format](https://github.com/andreas-31/cicd-automated-testing/blob/main/automatedtesting/selenium/seleniumLogfile_2021-05-19_18-25-06.csv).
 
 ##### Azure Log Analytics: Ingest Selenium Logfile
 The Selenium CSV logfile is ingested into an Azure Log Analytics workspace. The logs collected in Azure Monitor or Azure Log Analytics can be displayed and inspected with [Kusto](https://docs.microsoft.com/en-us/azure/data-explorer/kusto/query/tutorial?pivots=azuremonitor) queries.
