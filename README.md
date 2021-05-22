@@ -156,4 +156,14 @@ The Stress Test Plan is designed to send many HTTP requests in a short amount of
 | *JMeter Stress Test Plan: "GET All" queries executed by 30 users over 30 seconds.* |
 
 ##### Azure Monitor: Send Alarms by Email
+Azure Monitor alarms have been configured for "cicd-app-AppService" (Fake REST API webapp):
+- AppServiceCPU_TimeAlert: triggers whenever the maximum CPU time is greater than 30
+- AppServiceHandleCountAlert: trigger whenever the maximum handles is greater than 50
 
+| ![Azure Monitor: alarms configured for App Service "cicd-app-AppService"](https://user-images.githubusercontent.com/20167788/119224956-49a76280-bb01-11eb-8489-8394b0231a89.PNG) | 
+|:--:| 
+| *Azure Monitor: alarms configured for App Service "cicd-app-AppService".* |
+
+| ![Azure Monitor: graph showing that alarm triggered because maximum CPU time exceeded 30](https://user-images.githubusercontent.com/20167788/119224452-c553e000-bafe-11eb-9a76-4013dd4ebce6.PNG) | 
+|:--:| 
+| *Azure Monitor: graph showing that alarm did fire because maximum CPU time exceeded 30.* |
