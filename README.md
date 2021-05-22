@@ -153,7 +153,7 @@ The Stress Test Plan is designed to send many HTTP requests in a short amount of
 
 | ![JMeter Stress Test Plan: "GET All" queries executed by 30 users over 30 seconds](https://user-images.githubusercontent.com/20167788/119222245-a26ffe80-baf3-11eb-8f1e-07634a72a410.PNG) | 
 |:--:| 
-| *JMeter Stress Test Plan: "GET All" queries executed by 30 users per thread group (90 in total) over 30 seconds.* |
+| *JMeter Stress Test Plan: "GET All" queries executed by 30 users per thread group (amounts to 90 users in total) over 30 seconds.* |
 
 ##### Azure Pipelines: Publishing of JMeter Test Reports
 
