@@ -26,7 +26,7 @@ The subsequently described CI/CD pipeline is defined in the YAML file ```azure-p
 | *Azure Pipelines showing jobs for each stage.* |
 
 ### Build Stage
-The Build stage performs several steps:
+The Build job in the Build stage performs several steps:
 - Terraform: credentials, initialize, validate, plan, apply, show
 - Newman: install, run, publish results
 - Webapp Artifact: Create and upload ZIP archive containing Fake REST API webapp
@@ -65,12 +65,20 @@ The API Data Validation Test Suite first creating employee data and then validat
 |V2 Validate Employee Data |http://dummy.restapiexample.com/api/v1/employee/{{newId}}|
 
 ### Deployment Stage
+The following jobs are run in the Deployment stage:
+- Job "Deployment: FakeRestApi": Deploy Azure Web App
+- Job "Deployment: VMDeploy":
+  * Deploy and Run Selenium on Ubuntu VM
+  * Ingest Selenium logfile into Azure Log Analytics
+- Job "RunLoadTestsWithJMeter":
+  * JMeter Setup And Run
+  * Publish JMeter test reports as artifacts in the pipeline
 #### Deploy Fake REST API Artifact to Azure App Services
 The application package (ZIP file) containing the web app is deployed to the app service that has earlier been created by Terraform in the build stage. Azure App Service registers a domain name for the web app 
 
 #### Deploy and Run Selenium on Ubuntu VM
 Functional UI test are run in Python scripts by using the [Selenium WebDriver](https://pypi.org/project/selenium/) Python module and the [chromedriver](https://sites.google.com/a/chromium.org/chromedriver/downloads) driver for controlling the Chromium web browser in non-GUI mode.
 
-The test website [saucedemo.com/](https://www.saucedemo.com/) is used for running functional UI tests like logging into the webshop, adding items to the shopping cart, and then removing items again. After adding or removing an item, it is verified that the item is really in or no longer in the shopping cart, respectively.
+The test website [saucedemo.com](https://www.saucedemo.com/) is used for running functional UI tests like logging into the webshop, adding items to the shopping cart, and then removing items again. After adding or removing an item, it is verified that the item is really in or no longer in the shopping cart, respectively.
 
 #### Run Load Tests With JMeter and Publish Them
