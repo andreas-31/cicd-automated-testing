@@ -34,12 +34,12 @@ The subsequently described CI/CD pipeline is defined in the YAML file ```azure-p
 The Build job in the Build stage performs several steps:
 - Install an SSH Key: installs SSH key on Azure Pipelines agent where the Terraform commands will be run.
 - Terraform: credentials, initialize, validate, plan, apply, show
-- Newman: install, run, publish results
+- Newman: install Newman, run API integration tests, publish results
 - Webapp Artifact: Create and upload ZIP archive containing Fake REST API webapp
 #### Terraform (Infrastructure as Code)
 Terraform is used in the CI/CD pipeline to provision and manage resources in Azure cloud. In order to allow Terraform to create resources in Azure, a [Service Connection](https://docs.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints?view=azure-devops&tabs=yaml) to Azure Resource Manager (ARM) using service principal authentication has been configured in the Project Settings in Azure DevOps. Terraform uses the Azure credentials that are made available by the service connection as environment variables: ARM_CLIENT_ID, ARM_CLIENT_SECRET, ARM_SUBSCRIPTION_ID, and ARM_TENANT_ID.
 
-Terraform has been configured to store state remotely in Azure storage account by following this tutorial: [Store Terraform state in Azure Storage](https://docs.microsoft.com/en-us/azure/developer/terraform/store-state-in-azure-storage).
+Terraform has been configured to store state remotely in Azure storage account by following this tutorial: [Store Terraform state in Azure Storage](https://docs.microsoft.com/en-us/azure/developer/terraform/store-state-in-azure-storage). The parameters for configuring the remote Terraform backend are defined as variables in ```azure-piplines.yaml``` (resource_group_name, storage_account_name, container_name, key) or queried at pipeline runtime with Azure CLI (access_key for Azure storage account).
 
 | ![Azure Storage Explorer showing Terraform state (.tfstate) files stored in Azure storage account](https://user-images.githubusercontent.com/20167788/119124722-4644a600-ba31-11eb-8f1d-eda3bdceca4c.PNG) | 
 |:--:| 
@@ -65,11 +65,22 @@ The API Regression Test Suite checks all API endpoints for successful response s
 |R4 Update Employee |http://dummy.restapiexample.com/api/v1/update/{{id}}|
 |R5 Delete Employee |http://dummy.restapiexample.com/api/v1/delete/{{id}}|
 
+The API Regression Test Suite is run in the pipeline with this command:
+```
+newman run "automatedtesting/postman/API Regression Test Suite.postman_collection.json" --env-var newSalary="456" --environment automatedtesting/postman/DummyRestApiEnvironment.postman_environment.json --reporters cli,junit --reporter-junit-export newmanResults/junitReport-regressionTests.xml
+```
+
 The API Data Validation Test Suite first creating employee data and then validates that the employee data has been correctly provided by the web application:
 |Data Validation Testcase |API Endpoint |
 |--- | --- |
 |V1 Create Employee Data |http://dummy.restapiexample.com/api/v1/create|
 |V2 Validate Employee Data |http://dummy.restapiexample.com/api/v1/employee/{{newId}}|
+
+The API Data Validation Test Suite is run in the pipeline with this command:
+```
+newman run "automatedtesting/postman/API Data Validation Test Suite.postman_collection.json" --environment automatedtesting/postman/DummyRestApiEnvironment.postman_environment.json --iteration-data automatedtesting/postman/Dummy-REST-API-Data.csv --reporters cli,junit --reporter-junit-export newmanResults/junitReport-dataValidationTests.xml
+```
+The ["Publish Test Results"](https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/test/publish-test-results) task is used to publish the results of the regression and data validation test runs in "JUnit" format to Azure Pipelines Test Plans.
 
 ### Deployment Stage
 The following jobs are run in the Deployment stage:
@@ -78,8 +89,9 @@ The following jobs are run in the Deployment stage:
   * Deploy and Run Selenium on Ubuntu VM
   * Ingest Selenium logfile into Azure Log Analytics
 - Job "RunLoadTestsWithJMeter":
-  * JMeter Setup And Run
-  * Publish JMeter test reports as artifacts in the pipeline
+  * JMeter installation and setup
+  * Start JMeter to run load tests against the deployed webapp (Fake REST API): endurance tests and stress tests
+  * Publish JMeter test reports as artifacts (ZIP files) in the pipeline
 #### Deploy Fake REST API Artifact to Azure App Services
 The application package (ZIP file) containing the web app is deployed to the app service that has earlier been created by Terraform in the build stage. Azure App Service registers a domain name for the web app 
 
