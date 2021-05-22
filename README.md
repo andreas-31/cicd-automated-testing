@@ -101,10 +101,18 @@ Functional UI test are defined and run in Python scripts by using the [Selenium 
 
 The test website [saucedemo.com](https://www.saucedemo.com/) is used for running functional UI tests like logging into the webshop, adding items to the shopping cart, and then removing items again. After adding or removing an item, it is verified that the item is really in or no longer in the shopping cart, respectively.
 
-The Python scripts provides information of its status by writing log messages to the CLI as well as a Selenium logfile in CSV format: see [exemplary Selenium logfile in CSV format](https://github.com/andreas-31/cicd-automated-testing/blob/main/automatedtesting/selenium/seleniumLogfile_2021-05-19_18-25-06.csv).
+The Python scripts provides information of its status by writing log messages to the CLI as well as a Selenium logfile in CSV format: see [exemplary Selenium logfile in CSV format](https://github.com/andreas-31/cicd-automated-testing/blob/main/automatedtesting/selenium/seleniumLogfile_2021-05-19_18-25-06.csv). The following data fields are logged in the CSV file:
+- Time: timestamp with date and time when log message has been generated.
+- Category: helps with structuring the log messages.
+  * chrome: log messages related to start and stop of browser.
+  * screenshot: log messages related to creation of screenshots.
+  * login: log messages related to the login page.
+  * mainpage: log messages related to the webshop's main page.
+  * shoppingcart: log messages related to the webshop's shopping cart page.
+- Message: String describing the logged event.
 
 ##### Azure Log Analytics: Ingest Selenium Logfile
-The Selenium CSV logfile is ingested into an Azure Log Analytics workspace. The logs collected in Azure Monitor or Azure Log Analytics can be displayed and inspected with [Kusto](https://docs.microsoft.com/en-us/azure/data-explorer/kusto/query/tutorial?pivots=azuremonitor) queries.
+The Selenium CSV logfile is ingested into an Azure Log Analytics workspace by the Python script ```ingest_logs_into_azure_monitor.py```. It reads the CSV file line by line and sends the log messages in POST request to Azure Log Analytics. This approach was chosen because the [Log Analytics agent](https://docs.microsoft.com/en-us/azure/azure-monitor/agents/agent-linux) did not work reliably on Linux. After ingestion of the logs, they can be searched and analyzed with [Kusto](https://docs.microsoft.com/en-us/azure/data-explorer/kusto/query/tutorial?pivots=azuremonitor) queries. The page for entering Kusto queries can be opened by clicking on "View Logs" link on the "Overview" page in Log Analytics workspace.
 
 | ![Kusto query for displaying all Selenium logs related to removed shopping cart items sorted by time generated](https://user-images.githubusercontent.com/20167788/119223458-dbab6d00-baf9-11eb-9a5d-6ebd91e30558.PNG) | 
 |:--:| 
