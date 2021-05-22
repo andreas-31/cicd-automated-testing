@@ -80,7 +80,7 @@ The API Data Validation Test Suite is run in the pipeline with this command:
 ```
 newman run "automatedtesting/postman/API Data Validation Test Suite.postman_collection.json" --environment automatedtesting/postman/DummyRestApiEnvironment.postman_environment.json --iteration-data automatedtesting/postman/Dummy-REST-API-Data.csv --reporters cli,junit --reporter-junit-export newmanResults/junitReport-dataValidationTests.xml
 ```
-The [Publish Test Results task](https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/test/publish-test-results) is used to publish the results of the regression and data validation test runs in "JUnit" format to Azure Pipelines Test Plans.
+The [Publish Test Results task](https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/test/publish-test-results) is used to publish the results of the regression and data validation test runs in "JUnit" format to Azure DevOps Test Plans.
 
 | ![Azure DevOps Test Plans: test run summary is shown for Newman Regression Test Suite](https://user-images.githubusercontent.com/20167788/119224498-ff24e680-bafe-11eb-8283-c36ec5dcc31f.PNG) | 
 |:--:| 
