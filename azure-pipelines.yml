@@ -181,196 +181,196 @@ stages:
         testResultsFiles: 'newmanResults/junitReport-dataValidationTests.xml'
         testRunTitle: 'Newman Data Validation Tests'
 
-    #- bash: |
-    #    set -eu  # fail on error
-    #    terraform destroy -input=false -auto-approve \
-    #      -var="subscription_id=$(ARM_SUBSCRIPTION_ID)" \
-    #      -var="client_id=$(ARM_CLIENT_ID)" \
-    #      -var="client_secret=$(ARM_CLIENT_SECRET)" \
-    #      -var="tenant_id=$(ARM_TENANT_ID)" \
-    #      -var="location=$(azureLocation)" \
-    #      -var="resource_group=$(azureResourceGroup)" \
-    #      -var="application_type=$(azureApplicationType)" \
-    #      -var="virtual_network_name=$(azureVirtualNetworkName)" \
-    #      -var="address_prefix_test=$(azureAddressPrefixTest)" \
-    #      -var="address_space=$(azureAddressSpace)"
-    #  displayName: Terraform destroy
-    #  workingDirectory: '$(terraformDirectory)'
+    - bash: |
+        set -eu  # fail on error
+        terraform destroy -input=false -auto-approve \
+          -var="subscription_id=$(ARM_SUBSCRIPTION_ID)" \
+          -var="client_id=$(ARM_CLIENT_ID)" \
+          -var="client_secret=$(ARM_CLIENT_SECRET)" \
+          -var="tenant_id=$(ARM_TENANT_ID)" \
+          -var="location=$(azureLocation)" \
+          -var="resource_group=$(azureResourceGroup)" \
+          -var="application_type=$(azureApplicationType)" \
+          -var="virtual_network_name=$(azureVirtualNetworkName)" \
+          -var="address_prefix_test=$(azureAddressPrefixTest)" \
+          -var="address_space=$(azureAddressSpace)"
+      displayName: Terraform destroy
+      workingDirectory: '$(terraformDirectory)'
 
-- stage: Deployment
-  jobs:
-  - deployment: FakeRestAPI
-    pool:
-      vmImage: 'Ubuntu-18.04'
-    environment: 'TEST'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: AzureWebApp@1
-            displayName: 'Deploy Azure Web App'
-            inputs:
-              azureSubscription: 'arm-resource-group'
-              appName: 'cicd-app-AppService'
-              appType: webApp
-              package: $(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip
-  - deployment: VMDeploy
-    displayName: Deploy and Run Selenium on Ubuntu VM
-    environment:
-      name: TEST
-      resourceType: VirtualMachine
-      tags: ubuntu
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: Bash@3
-            displayName: 'Deploy and Run Selenium'
-            inputs:
-              targetType: 'inline'
-              script: |
-                #! /bin/bash
-                touch VMDeploy.txt
-                sudo apt-get upgrade -y
-                sudo apt-get install python3-distutils -y
-                sudo apt-get install python3-apt -y
-                sudo apt-get install unzip -y
+#- stage: Deployment
+#  jobs:
+#  - deployment: FakeRestAPI
+#    pool:
+#      vmImage: 'Ubuntu-18.04'
+#    environment: 'TEST'
+#    strategy:
+#      runOnce:
+#        deploy:
+#          steps:
+#          - task: AzureWebApp@1
+#            displayName: 'Deploy Azure Web App'
+#            inputs:
+#              azureSubscription: 'arm-resource-group'
+#              appName: 'cicd-app-AppService'
+#              appType: webApp
+#              package: $(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip
+#  - deployment: VMDeploy
+#    displayName: Deploy and Run Selenium on Ubuntu VM
+#    environment:
+#      name: TEST
+#      resourceType: VirtualMachine
+#      tags: ubuntu
+#    strategy:
+#      runOnce:
+#        deploy:
+#          steps:
+#          - task: Bash@3
+#            displayName: 'Deploy and Run Selenium'
+#            inputs:
+#              targetType: 'inline'
+#              script: |
+#                #! /bin/bash
+#                touch VMDeploy.txt
+#                sudo apt-get upgrade -y
+#                sudo apt-get install python3-distutils -y
+#                sudo apt-get install python3-apt -y
+#                sudo apt-get install unzip -y
 
-                # install python pip
-                # sudo apt-get install python3-pip -y
-                curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py || wget https://bootstrap.pypa.io/get-pip.py
-                python3 get-pip.py
-                export PATH=$PATH:/home/azureuser/.local/bin
-                pip3 --version
-                python3 -m pip install -U pip
+#                # install python pip
+#                # sudo apt-get install python3-pip -y
+#                curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py || wget https://bootstrap.pypa.io/get-pip.py
+#                python3 get-pip.py
+#                export PATH=$PATH:/home/azureuser/.local/bin
+#                pip3 --version
+#                python3 -m pip install -U pip
+#                
+#                sudo snap install chromium
+#                pip3 install selenium
+#                # check if chromedriver is already installed
+#                if [ ! -f "/usr/local/share/chromedriver" ]; then
+#                  echo "Downloading chromedriver ..."
+#                  wget https://chromedriver.storage.googleapis.com/90.0.4430.24/chromedriver_linux64.zip
+#                  unzip chromedriver_linux64.zip
+#                  chmod +x chromedriver
+
+#                  sudo mv -f chromedriver /usr/local/share/chromedriver
+#                  sudo ln -s /usr/local/share/chromedriver /usr/local/bin/chromedriver
+#                  sudo ln -s /usr/local/share/chromedriver /usr/bin/chromedriver
+#                fi
+
+#                # dowload python script with test cases
+#                wget -O login.py https://raw.githubusercontent.com/andreas-31/cicd-automated-testing/main/automatedtesting/selenium/login.py
+
+#                # running functional UI tests with Selenium in headless mode
+#                python3 ./login.py | tee ./selenium_logfile.txt
+
+#                # check files
+#                echo "pwd: `pwd`"
+#                echo "ls -la"
+#                ls -la
+#                echo "ls -la automatedtesting/selenium"
+#                ls -la automatedtesting/selenium
+#                echo "cat ./selenium_logfile.txt"
+#                cat ./selenium_logfile.txt
                 
-                sudo snap install chromium
-                pip3 install selenium
-                # check if chromedriver is already installed
-                if [ ! -f "/usr/local/share/chromedriver" ]; then
-                  echo "Downloading chromedriver ..."
-                  wget https://chromedriver.storage.googleapis.com/90.0.4430.24/chromedriver_linux64.zip
-                  unzip chromedriver_linux64.zip
-                  chmod +x chromedriver
+#                # ingest Selenium logs into Azure Monitor Log Analytics
+#                wget -O ingest_logs_into_azure_monitor.py https://raw.githubusercontent.com/andreas-31/cicd-automated-testing/main/automatedtesting/selenium/ingest_logs_into_azure_monitor.py
+#                wget -O LogAnalyticsDataCollector.py https://raw.githubusercontent.com/andreas-31/cicd-automated-testing/main/automatedtesting/selenium/LogAnalyticsDataCollector.py
+#                python3 ./ingest_logs_into_azure_monitor.py $(AZURE_LOG_CUSTOMER_ID) $(AZURE_LOG_SHARED_KEY)
 
-                  sudo mv -f chromedriver /usr/local/share/chromedriver
-                  sudo ln -s /usr/local/share/chromedriver /usr/local/bin/chromedriver
-                  sudo ln -s /usr/local/share/chromedriver /usr/bin/chromedriver
-                fi
+#  - job: RunLoadTestsWithJMeter
+#    displayName: 'JMeter Setup And Run'
+#    pool:
+#      vmImage: ubuntu-latest
+#    steps:
+#    - task: Bash@3
+#      displayName: 'JMeter Load Tests'
+#      inputs:
+#        targetType: 'inline'
+#        script: |
+#          #! /bin/bash
+#          #sudo apt update -y
+#          #sudo apt upgrade -y
+#          # install Java Runtime Environment
+#          sudo apt-get install openjdk-11-jre zip -y
+#          # check the Java version
+#          java -version
+#          # print pwd
+#          echo "pwd: `pwd`"
 
-                # dowload python script with test cases
-                wget -O login.py https://raw.githubusercontent.com/andreas-31/cicd-automated-testing/main/automatedtesting/selenium/login.py
-
-                # running functional UI tests with Selenium in headless mode
-                python3 ./login.py | tee ./selenium_logfile.txt
-
-                # check files
-                echo "pwd: `pwd`"
-                echo "ls -la"
-                ls -la
-                echo "ls -la automatedtesting/selenium"
-                ls -la automatedtesting/selenium
-                echo "cat ./selenium_logfile.txt"
-                cat ./selenium_logfile.txt
-                
-                # ingest Selenium logs into Azure Monitor Log Analytics
-                wget -O ingest_logs_into_azure_monitor.py https://raw.githubusercontent.com/andreas-31/cicd-automated-testing/main/automatedtesting/selenium/ingest_logs_into_azure_monitor.py
-                wget -O LogAnalyticsDataCollector.py https://raw.githubusercontent.com/andreas-31/cicd-automated-testing/main/automatedtesting/selenium/LogAnalyticsDataCollector.py
-                python3 ./ingest_logs_into_azure_monitor.py $(AZURE_LOG_CUSTOMER_ID) $(AZURE_LOG_SHARED_KEY)
-
-  - job: RunLoadTestsWithJMeter
-    displayName: 'JMeter Setup And Run'
-    pool:
-      vmImage: ubuntu-latest
-    steps:
-    - task: Bash@3
-      displayName: 'JMeter Load Tests'
-      inputs:
-        targetType: 'inline'
-        script: |
-          #! /bin/bash
-          #sudo apt update -y
-          #sudo apt upgrade -y
-          # install Java Runtime Environment
-          sudo apt-get install openjdk-11-jre zip -y
-          # check the Java version
-          java -version
-          # print pwd
-          echo "pwd: `pwd`"
-
-          # download Apache JMeter load testing tool
-          jmeter_file="apache-jmeter-5.4.1.zip"
-          if [ ! -f "$jmeter_file" ]; then
-            echo "File $jmeter_file not found! Downloading ..."
-            wget "https://jmeter.apache.org/[preferred]/jmeter/binaries/$jmeter_file" || \
-              wget "http://ftp.cc.uoc.gr/mirrors/apache/jmeter/binaries/$jmeter_file"
-          fi
+#          # download Apache JMeter load testing tool
+#          jmeter_file="apache-jmeter-5.4.1.zip"
+#          if [ ! -f "$jmeter_file" ]; then
+#            echo "File $jmeter_file not found! Downloading ..."
+#            wget "https://jmeter.apache.org/[preferred]/jmeter/binaries/$jmeter_file" || \
+#              wget "http://ftp.cc.uoc.gr/mirrors/apache/jmeter/binaries/$jmeter_file"
+#          fi
           
-          # extract the JMeter archive
-          jmeter_directory="apache-jmeter-5.4.1"
-          if [ ! -d "$jmeter_directory" ]; then
-            echo "Directory $jmeter_directory not found! Extracting ZIP archive ..."
-            unzip apache-jmeter-5.4.1.zip
-          fi
+#          # extract the JMeter archive
+#          jmeter_directory="apache-jmeter-5.4.1"
+#          if [ ! -d "$jmeter_directory" ]; then
+#            echo "Directory $jmeter_directory not found! Extracting ZIP archive ..."
+#            unzip apache-jmeter-5.4.1.zip
+#          fi
           
-          # rename the JMeter directory to a standard name
-          mv "$jmeter_directory" jmeter
-          # add JMeter binary directory to PATH environment variable
-          export PATH="$PATH:`pwd`/jmeter/bin"
+#          # rename the JMeter directory to a standard name
+#          mv "$jmeter_directory" jmeter
+#          # add JMeter binary directory to PATH environment variable
+#          export PATH="$PATH:`pwd`/jmeter/bin"
           
-          # run JMeter in headless mode (endurance tests)
-          # JMeter testplan files: activities.csv authors.csv books.csv Endurance_Test_Plan_CICD.jmx user.properties
-          echo "====="
-          echo "Starting JMeter in headless mode to run endurance tests"
-          jmeter_endurance_test_result_file="resultsJMeterEnduranceTests.csv"
-          # delete JMeter results file that may exist from earlier pipeline runs
-          if [ -f "$jmeter_endurance_test_result_file" ]; then
-            echo "Deleting $jmeter_endurance_test_result_file !"
-            rm "$jmeter_endurance_test_result_file"
-          fi
-          JVM_ARGS="-Xms512m -Xmx512m" jmeter -n -t automatedtesting/jmeter/Endurance_Test_Plan_CICD.jmx -l "$jmeter_endurance_test_result_file" -e -o jmeter_report_endurance_tests
-          # create ZIP file of endurance test results directory
-          zip -r jmeter_report_endurance_tests.zip jmeter_report_endurance_tests
-          echo "====="
+#          # run JMeter in headless mode (endurance tests)
+#          # JMeter testplan files: activities.csv authors.csv books.csv Endurance_Test_Plan_CICD.jmx user.properties
+#          echo "====="
+#          echo "Starting JMeter in headless mode to run endurance tests"
+#          jmeter_endurance_test_result_file="resultsJMeterEnduranceTests.csv"
+#          # delete JMeter results file that may exist from earlier pipeline runs
+#          if [ -f "$jmeter_endurance_test_result_file" ]; then
+#            echo "Deleting $jmeter_endurance_test_result_file !"
+#            rm "$jmeter_endurance_test_result_file"
+#          fi
+#          JVM_ARGS="-Xms512m -Xmx512m" jmeter -n -t automatedtesting/jmeter/Endurance_Test_Plan_CICD.jmx -l "$jmeter_endurance_test_result_file" -e -o jmeter_report_endurance_tests
+#          # create ZIP file of endurance test results directory
+#          zip -r jmeter_report_endurance_tests.zip jmeter_report_endurance_tests
+#          echo "====="
 
-          # Output file listings to check generated files and directories
-          echo "ls -la"
-          ls -la
-          echo "ls -la jmeter"
-          ls -la jmeter
-          echo "ls -la jmeter/bin"
-          ls -la jmeter/bin
+#          # Output file listings to check generated files and directories
+#          echo "ls -la"
+#          ls -la
+#          echo "ls -la jmeter"
+#          ls -la jmeter
+#          echo "ls -la jmeter/bin"
+#          ls -la jmeter/bin
 
-          # run JMeter in headless mode (stress tests)
-          echo "====="
-          echo "Starting JMeter in headless mode to run stress tests"
-          jmeter_stress_test_result_file="resultsJMeterStressTests.csv"
-          # delete JMeter results file that may exist from earlier pipeline runs
-          if [ -f "$jmeter_stress_test_result_file" ]; then
-            echo "Deleting $jmeter_stress_test_result_file !"
-            rm "$jmeter_stress_test_result_file"
-          fi
-          JVM_ARGS="-Xms512m -Xmx512m" jmeter -n -t automatedtesting/jmeter/Stress_Test_Plan_CICD.jmx -l "$jmeter_stress_test_result_file" -e -o jmeter_report_stress_tests
-          # create ZIP file of stress test results directory
-          zip -r jmeter_report_stress_tests.zip jmeter_report_stress_tests
-          echo "====="
+#          # run JMeter in headless mode (stress tests)
+#          echo "====="
+#          echo "Starting JMeter in headless mode to run stress tests"
+#          jmeter_stress_test_result_file="resultsJMeterStressTests.csv"
+#          # delete JMeter results file that may exist from earlier pipeline runs
+#          if [ -f "$jmeter_stress_test_result_file" ]; then
+#            echo "Deleting $jmeter_stress_test_result_file !"
+#            rm "$jmeter_stress_test_result_file"
+#          fi
+#          JVM_ARGS="-Xms512m -Xmx512m" jmeter -n -t automatedtesting/jmeter/Stress_Test_Plan_CICD.jmx -l "$jmeter_stress_test_result_file" -e -o jmeter_report_stress_tests
+#          # create ZIP file of stress test results directory
+#          zip -r jmeter_report_stress_tests.zip jmeter_report_stress_tests
+#          echo "====="
 
-          # Output file listings to check generated files and directories
-          echo "ls -la"
-          ls -la
-          echo "ls -la jmeter"
-          ls -la jmeter
-          echo "ls -la jmeter/bin"
-          ls -la jmeter/bin
+#          # Output file listings to check generated files and directories
+#          echo "ls -la"
+#          ls -la
+#          echo "ls -la jmeter"
+#          ls -la jmeter
+#          echo "ls -la jmeter/bin"
+#          ls -la jmeter/bin
           
-    - task: PublishPipelineArtifact@1
-      displayName: 'Publish JMeter Report Endurance Tests'
-      inputs:
-        targetPath: jmeter_report_endurance_tests.zip
-        artifact: jmeter_report_endurance_tests
+#    - task: PublishPipelineArtifact@1
+#      displayName: 'Publish JMeter Report Endurance Tests'
+#      inputs:
+#        targetPath: jmeter_report_endurance_tests.zip
+#        artifact: jmeter_report_endurance_tests
     
-    - task: PublishPipelineArtifact@1
-      displayName: 'Publish JMeter Report Stress Tests'
-      inputs:
-        targetPath: jmeter_report_stress_tests.zip
-        artifact: jmeter_report_stress_tests
+#    - task: PublishPipelineArtifact@1
+#      displayName: 'Publish JMeter Report Stress Tests'
+#      inputs:
+#        targetPath: jmeter_report_stress_tests.zip
+#        artifact: jmeter_report_stress_tests
